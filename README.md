@@ -4,3 +4,4 @@
 | Name | Student ID | Github Username | 
 |------|-------------|----------------|
 | Steven Dy    |  40283742  | Steven01231 |
+| Aidana Abdybaeva    |  40281501  | xidxnx |
