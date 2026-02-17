@@ -1,0 +1,6 @@
+## Team
+**SOEN 345 Project Team**
+
+| Name | Student ID | Github Username | 
+|------|-------------|----------------|
+| Steven Dy    |  40283742  | Steven01231 |
