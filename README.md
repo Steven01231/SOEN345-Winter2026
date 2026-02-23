@@ -7,3 +7,15 @@
 | Aidana Abdybaeva    |  40281501  | xidxnx |
 | Yayi Chen | 40286042 | afkCYa |
 | Abdeljalil Sennaoui | 40117162 | abdeljalilsennaoui |
+
+## Setup
+
+### Firebase Configuration
+This project uses Firebase for authentication and database. You need to configure Firebase locally:
+
+1. See [Firebase Setup Guide](docs/FIREBASE_SETUP.md) for detailed instructions
+2. Download `google-services.json` from Firebase Console
+3. Place it in the `app/` directory
+4. The file is gitignored and must be added by each team member
+
+**Note:** The app will not build without `google-services.json`. Follow the setup guide to obtain this file.
