@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Claude context file - local only, never commit
+CLAUDE_CONTEXT.md
