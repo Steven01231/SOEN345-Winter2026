@@ -10,6 +10,15 @@
 
 ## Setup
 
+### Android Studio Configuration
+This project uses Android Studio as a platform to run the project
+
+To access the project:
+1. Clone the repository from GitHub Desktop or GitBash
+2. Open Android Studio -> Open Project -> Enter Project Repository (Generally in GitHub folder)
+
+To run the project:
+
 ### Firebase Configuration
 This project uses Firebase for authentication and database. You need to configure Firebase locally:
 
