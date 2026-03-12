@@ -25,15 +25,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = RegistrationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
-        binding.btnSignUp.setOnClickListener {
-            // Replace 'LoginActivity' with the name of your target Activity class
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
-        }
 
+        val intent = Intent(this, LogInActivity::class.java)
+        startActivity(intent)
 
         // Test Firebase connection
         testFirebaseConnection()
