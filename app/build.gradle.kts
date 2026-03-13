@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
     id("jacoco")
-    id("org.sonarqube") version "6.0.0.5145"
 }
 
 android {
@@ -91,21 +90,6 @@ tasks.register<JacocoReport>("jacocoTestReport") {
             "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
         )
     })
-}
-
-// SonarQube configuration
-sonar {
-    properties {
-        property("sonar.projectKey", "Steven01231_SOEN345-Winter2026")
-        property("sonar.organization", "steven01231")
-        property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sources", "src/main/java")
-        property("sonar.tests", "src/test/java,src/androidTest/java")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get()}/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
-        property("sonar.exclusions", "**/R.class,**/R\$*.class,**/BuildConfig.*,**/Manifest*.*")
-        property("sonar.java.binaries", "${layout.buildDirectory.get()}/intermediates/javac/debug/classes")
-        property("sonar.kotlin.binaries", "${layout.buildDirectory.get()}/tmp/kotlin-classes/debug")
-    }
 }
 
 dependencies {
