@@ -11,7 +11,6 @@ import com.example.soen345_winter2026.databinding.ItemEventBinding
 class EventAdapter(private var events: List<Event>) :
     RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
-    // Maps category to badge background drawable
     private val categoryBadgeColors = mapOf(
         "Concert" to R.drawable.cr19370800bf6339a,
         "Movie" to R.drawable.cr19370800b2196f3,
@@ -36,11 +35,9 @@ class EventAdapter(private var events: List<Event>) :
                 binding.tvSeats.setTextColor(Color.parseColor("#4CAF50"))
             }
 
-            // Category badge color
             val badgeRes = categoryBadgeColors[event.category] ?: R.drawable.cr19370800bf6339a
             binding.llCategoryBadge.setBackgroundResource(badgeRes)
 
-            // Load event image if available
             if (event.imageUrl.isNotBlank()) {
                 Glide.with(binding.root.context)
                     .load(event.imageUrl)
