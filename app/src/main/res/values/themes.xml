@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SOEN345Winter2026" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.SOEN345Winter2026" parent="Theme.MaterialComponents.Light.NoActionBar" />
+
+    <style name="cr8">
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>

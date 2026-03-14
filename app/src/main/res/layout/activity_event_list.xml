@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/r3gxdtj5uraj"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="15dp"
+        android:elevation="2dp"
+        android:orientation="vertical">
+
+        <!-- Logo row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800b2196f3"
+                android:paddingTop="8dp"
+                android:paddingBottom="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="E" />
+            </LinearLayout>
+
+            <TextView
+                android:textColor="#212121"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:text="EventBook" />
+
+        </LinearLayout>
+
+        <!-- Search bar (functional EditText styled like Figma) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:background="@drawable/cr8bf5f5f5"
+            android:paddingVertical="12dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                app:shapeAppearanceOverlay="@style/cr8"
+                android:layout_width="19dp"
+                android:layout_height="19dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="8dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:scaleType="fitXY" />
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="Search events..."
+                android:textColor="#212121"
+                android:textColorHint="#757575"
+                android:textSize="16sp"
+                android:inputType="text"
+                android:imeOptions="actionSearch"
+                android:maxLines="1" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Category filter tabs -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingVertical="16dp"
+        android:paddingHorizontal="15dp"
+        android:layout_marginBottom="9dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/r6f8umn2i5l6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800b2196f3"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="All" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rm2oltgkirt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800bf5f5f5"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvMovies"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Movies" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/rsw2srfk1a0o"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800bf5f5f5"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Concerts" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/r97kqkl7tb4k"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800bf5f5f5"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Travel" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/r03y1ckq5t7pp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cr19370800bf5f5f5"
+                android:paddingVertical="7dp"
+                android:paddingHorizontal="16dp"
+                android:layout_marginEnd="9dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:orientation="vertical">
+                <TextView
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="Sports" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Loading indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tvEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No events found."
+        android:textAlignment="center"
+        android:textColor="#757575"
+        android:textSize="16sp"
+        android:padding="32dp"
+        android:visibility="gone" />
+
+    <!-- Events list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
+
+    <!-- Bottom navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:paddingVertical="10dp"
+        android:elevation="10dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp"
+            android:layout_marginHorizontal="37dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@android:drawable/ic_menu_today"
+                android:scaleType="fitXY" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:scaleType="fitXY" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@android:drawable/ic_menu_agenda"
+                android:scaleType="fitXY" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:src="@android:drawable/ic_menu_my_calendar"
+                android:scaleType="fitXY" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="33dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:textColor="#2196F3"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Home" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <TextView
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Search" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <TextView
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="My Tickets" />
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1" />
+            <TextView
+                android:textColor="#757575"
+                android:textSize="12sp"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Profile" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
