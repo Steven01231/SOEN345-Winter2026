@@ -93,6 +93,8 @@ dependencies {
     // Assertions - Google Truth (optional, cleaner assertions)
     testImplementation(libs.truth)
 
+    testImplementation("org.robolectric:robolectric:4.11.1")
+
     // Instrumented Testing
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -106,4 +108,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation("com.google.android.material:material:1.11.0")
+
 }
