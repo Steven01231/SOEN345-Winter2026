@@ -11,9 +11,9 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import io.mockk.*
-import org.junit.Assert.*
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class RegistrationDBTest {
 
@@ -24,7 +24,7 @@ class RegistrationDBTest {
     private lateinit var mockTaskAuth: Task<AuthResult>
     private lateinit var mockTaskVoid: Task<Void>
 
-    @Before
+    @BeforeEach
     fun setUp() {
         MockKAnnotations.init(this)
 

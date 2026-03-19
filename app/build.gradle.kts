@@ -45,8 +45,7 @@ android {
         unitTests {
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
-
-
+            all { it.useJUnitPlatform() }
         }
     }
 
@@ -107,9 +106,6 @@ dependencies {
     // Cloud Firestore
     implementation("com.google.firebase:firebase-firestore")
 
-    // Unit Testing - JUnit 4 (for compatibility)
-    testImplementation(libs.junit)
-
     // Unit Testing - JUnit 5 (Jupiter)
     testImplementation(libs.junit.jupiter.api)
     testRuntimeOnly(libs.junit.jupiter.engine)
@@ -132,8 +128,6 @@ dependencies {
     // Assertions - Google Truth (optional, cleaner assertions)
     testImplementation(libs.truth)
 
-    testImplementation("org.robolectric:robolectric:4.12.2")
-
     // Instrumented Testing
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -149,7 +143,5 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation("com.google.android.material:material:1.11.0")
-
-    testImplementation("androidx.test:core:1.5.0")
 
 }
