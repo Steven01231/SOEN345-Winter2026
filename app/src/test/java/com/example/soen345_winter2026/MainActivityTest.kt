@@ -162,4 +162,19 @@ class MainActivityTest {
         // Verification: If it reached here without crashing, the failure branch is covered
         verify { mockFirestoreTask.addOnFailureListener(any()) }
     }
+
+    @Test
+    fun `testFirebaseConnection with null user should not call writeTestDocument`() {
+        val mockAuthResult = mockk<AuthResult> { every { user } returns null }
+        every { mockAuth.signInAnonymously() } returns mockAuthTask
+
+        Robolectric.buildActivity(MainActivity::class.java).create()
+
+        val authSuccessSlot = slot<OnSuccessListener<AuthResult>>()
+        verify { mockAuthTask.addOnSuccessListener(capture(authSuccessSlot)) }
+        authSuccessSlot.captured.onSuccess(mockAuthResult)
+
+        // Firestore should NOT be called when uid is null
+        verify(exactly = 0) { mockDb.collection(any()) }
+    }
 }

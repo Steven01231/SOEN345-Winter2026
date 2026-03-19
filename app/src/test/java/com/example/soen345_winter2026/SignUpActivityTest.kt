@@ -153,4 +153,45 @@ class SignUpActivityTest {
 
         assertTrue(activity.isFinishing)
     }
+
+    @Test
+    fun `should show error when password is empty`() {
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.etFullName.setText("Steven")
+        activity.binding.etEmail.setText("test@test.com")
+        // password left empty
+
+        activity.binding.btnSignUp.performClick()
+
+        assertEquals(
+            "Fields cannot be empty",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
+    }
+
+    @Test
+    fun `should show error when full name is empty`() {
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.etEmail.setText("test@test.com")
+        activity.binding.etPassword.setText("123456")
+        activity.binding.etConfirmPassword.setText("123456")
+        // fullName left empty
+
+        activity.binding.btnSignUp.performClick()
+
+        assertEquals(
+            "Fields cannot be empty",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
+    }
 }

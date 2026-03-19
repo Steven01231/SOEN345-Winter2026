@@ -126,4 +126,22 @@ class LogInActivityTest {
         val intent = shadowOf(activity).nextStartedActivity
         assertEquals(SignUpActivity::class.java.name, intent.component?.className)
     }
+
+    @Test
+    fun `should show error when only password is empty`() {
+        val controller = Robolectric.buildActivity(LogInActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.etEmail.setText("test@test.com")
+
+        activity.binding.btnLogin.performClick()
+
+        assertEquals(
+            "Fields cannot be empty",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
+    }
 }
