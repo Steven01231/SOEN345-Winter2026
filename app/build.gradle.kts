@@ -7,11 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.soen345_winter2026"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36   // ✅ just an integer
 
     defaultConfig {
         applicationId = "com.example.soen345_winter2026"
@@ -19,42 +15,54 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // Enable JUnit 5 for unit tests
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
-        unitTests.isIncludeAndroidResources = true
-    }
-
     buildTypes {
-        release {
+        getByName("debug") {
+            isTestCoverageEnabled = true  // ✅ Kotlin DSL correct
+        }
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
-        debug {
-            enableUnitTestCoverage = true
-            enableAndroidTestCoverage = true
-        }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
         viewBinding = true
     }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+
+            tasks.withType<Test>().configureEach {
+                extensions.configure(org.gradle.testing.jacoco.plugins.JacocoTaskExtension::class) {
+                    excludes = listOf(
+                        "android/**",
+                        "androidx/**",
+                        "org/robolectric/**",
+                        "jdk.internal.*"
+                    )
+                }
+            }
+
+
+        }
+    }
+
 }
 
-// JaCoCo configuration
 jacoco {
     toolVersion = "0.8.11"
 }
@@ -65,31 +73,24 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        csv.required.set(false)
-        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/jacocoTestReport/jacocoTestReport.xml"))
-        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/jacocoTestReport/html"))
     }
 
     val fileFilter = listOf(
         "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "android/**/*.*", "**/databinding/**",
-        "**/android/databinding/*Binding.class", "**/BR.*"
+        "**/*Test*.*", "**/databinding/**"
     )
 
-    val debugTree = fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
+    val debugTree = fileTree("${buildDir}/intermediates/javac/debug/classes") {
         exclude(fileFilter)
     }
-    val kotlinDebugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
+    val kotlinDebugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
         exclude(fileFilter)
     }
 
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
     classDirectories.setFrom(files(debugTree, kotlinDebugTree))
-    executionData.setFrom(fileTree(layout.buildDirectory.get()) {
-        include(
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-        )
+    sourceDirectories.setFrom(files("src/main/java"))
+    executionData.setFrom(fileTree(buildDir) {
+        include("jacoco/testDebugUnitTest.exec")
     })
 }
 
@@ -137,7 +138,7 @@ dependencies {
     // Assertions - Google Truth (optional, cleaner assertions)
     testImplementation(libs.truth)
 
-    testImplementation("org.robolectric:robolectric:4.11.1")
+    testImplementation("org.robolectric:robolectric:4.12.2")
 
     // Instrumented Testing
     androidTestImplementation(libs.androidx.junit)
@@ -154,5 +155,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
 
     implementation("com.google.android.material:material:1.11.0")
+
+    testImplementation("androidx.test:core:1.5.0")
 
 }

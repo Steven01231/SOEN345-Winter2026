@@ -10,7 +10,8 @@ import com.google.firebase.auth.FirebaseAuth
 
 class SignUpActivity: AppCompatActivity() {
 
-    private lateinit var binding: SignUpBinding
+    lateinit var binding: SignUpBinding
+    var registrationDB: RegistrationDB = RegistrationDB()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,8 +19,6 @@ class SignUpActivity: AppCompatActivity() {
         // 1. Inflate the layout using the correct binding class
         binding = SignUpBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val registrationDB = RegistrationDB();
 
         // 2. Setup the Register Button
         binding.btnSignUp.setOnClickListener {
@@ -53,10 +52,6 @@ class SignUpActivity: AppCompatActivity() {
             finish() // Destroys this activity and goes back to MainActivity
         }
 
-
-    }
-
-    private fun storeToDatabase(){
 
     }
 
