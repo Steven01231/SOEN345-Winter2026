@@ -17,3 +17,8 @@ app/google-services.json
 # Claude context and config files - local only, never commit
 CLAUDE_CONTEXT.md
 .claude/
+
+app/google-services 2.json
+.idea/copilot.data.migration.ask2agent.xml
+.idea/deviceManager.xml
+.idea/markdown.xml
