@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
-    id("jacoco")
 }
 
 android {
@@ -20,7 +19,7 @@ android {
 
     buildTypes {
         getByName("debug") {
-            isTestCoverageEnabled = true  // ✅ Kotlin DSL correct
+            enableUnitTestCoverage = true
         }
         getByName("release") {
             isMinifyEnabled = false
@@ -46,57 +45,12 @@ android {
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
 
-            tasks.withType<Test>().configureEach {
-                extensions.configure(org.gradle.testing.jacoco.plugins.JacocoTaskExtension::class) {
-                    excludes = listOf(
-                        "android/**",
-                        "androidx/**",
-                        "org/robolectric/**",
-                        "jdk.internal.*"
-                    )
-                }
-            }
-
 
         }
     }
 
 }
 
-jacoco {
-    toolVersion = "0.8.11"
-}
-
-tasks.register<JacocoReport>("jacocoTestReport") {
-    dependsOn("testDebugUnitTest")
-
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
-    }
-
-    val fileFilter = listOf(
-        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "**/databinding/**"
-    )
-
-    val debugTree = fileTree("${buildDir}/intermediates/javac/debug/compileDebugJavaWithJavac/classes") {
-        exclude(fileFilter)
-    }
-    // Include both known Kotlin output paths (varies by AGP version)
-    val kotlinTree1 = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
-    val kotlinTree2 = fileTree("${buildDir}/intermediates/built_in_kotlinc/debug/compileDebugKotlin/classes") {
-        exclude(fileFilter)
-    }
-
-    classDirectories.setFrom(files(debugTree, kotlinTree1, kotlinTree2))
-    sourceDirectories.setFrom(files("src/main/java"))
-    executionData.setFrom(fileTree(buildDir) {
-        include("outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec")
-    })
-}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
