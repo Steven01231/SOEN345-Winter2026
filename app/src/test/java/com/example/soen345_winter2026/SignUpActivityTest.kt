@@ -14,8 +14,7 @@ import org.robolectric.annotation.Config
 import org.robolectric.shadows.ShadowToast
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [30]
-    ) // ✅ stable SDK for Robolectric
+@Config(sdk = [30])
 class SignUpActivityTest {
 
     private lateinit var mockDb: RegistrationDB
@@ -30,11 +29,14 @@ class SignUpActivityTest {
         unmockkAll()
     }
 
+    // ✅ No DB needed → inject mock to prevent Firebase initialization
     @Test
     fun `should show error when fields are empty`() {
-        val activity = Robolectric.buildActivity(SignUpActivity::class.java)
-            .setup()
-            .get()
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
 
         activity.binding.btnSignUp.performClick()
 
@@ -44,11 +46,14 @@ class SignUpActivityTest {
         )
     }
 
+    // ✅ No DB needed → inject mock to prevent Firebase initialization
     @Test
     fun `should show error when passwords do not match`() {
-        val activity = Robolectric.buildActivity(SignUpActivity::class.java)
-            .setup()
-            .get()
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
 
         activity.binding.etFullName.setText("Steven")
         activity.binding.etEmail.setText("test@test.com")
@@ -63,14 +68,15 @@ class SignUpActivityTest {
         )
     }
 
+    // ✅ FIXED: inject BEFORE setup
     @Test
     fun `should call registrationDB and show success toast on success`() {
-        val activity = Robolectric.buildActivity(SignUpActivity::class.java)
-            .setup()
-            .get()
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
 
-        // Inject mock DB
-        activity.registrationDB = mockDb
+        val activity = controller.get()
+        activity.registrationDB = mockDb   // ✅ BEFORE setup
+
+        controller.setup()                // now onCreate runs
 
         activity.binding.etFullName.setText("Steven")
         activity.binding.etEmail.setText("test@test.com")
@@ -88,12 +94,7 @@ class SignUpActivityTest {
         activity.binding.btnSignUp.performClick()
 
         verify {
-            mockDb.signUp(
-                "test@test.com",
-                "123456",
-                "Steven",
-                any()
-            )
+            mockDb.signUp("test@test.com", "123456", "Steven", any())
         }
 
         assertEquals(
@@ -104,13 +105,15 @@ class SignUpActivityTest {
         assertTrue(activity.isFinishing)
     }
 
+    // ✅ FIXED: inject BEFORE setup
     @Test
     fun `should show error toast when signUp fails`() {
-        val activity = Robolectric.buildActivity(SignUpActivity::class.java)
-            .setup()
-            .get()
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
 
-        activity.registrationDB = mockDb
+        val activity = controller.get()
+        activity.registrationDB = mockDb   // ✅ BEFORE setup
+
+        controller.setup()                // now onCreate runs
 
         activity.binding.etFullName.setText("Steven")
         activity.binding.etEmail.setText("test@test.com")
@@ -118,7 +121,6 @@ class SignUpActivityTest {
         activity.binding.etConfirmPassword.setText("123456")
 
         val errorMsg = "Email already in use"
-
         val callbackSlot = slot<(Boolean, String?) -> Unit>()
 
         every {
@@ -130,12 +132,7 @@ class SignUpActivityTest {
         activity.binding.btnSignUp.performClick()
 
         verify {
-            mockDb.signUp(
-                "test@test.com",
-                "123456",
-                "Steven",
-                any()
-            )
+            mockDb.signUp("test@test.com", "123456", "Steven", any())
         }
 
         assertEquals(
@@ -146,9 +143,11 @@ class SignUpActivityTest {
 
     @Test
     fun `clicking login should finish activity`() {
-        val activity = Robolectric.buildActivity(SignUpActivity::class.java)
-            .setup()
-            .get()
+        val controller = Robolectric.buildActivity(SignUpActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
 
         activity.binding.tvLogin.performClick()
 

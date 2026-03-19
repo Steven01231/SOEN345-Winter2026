@@ -9,15 +9,19 @@ import com.example.soen345_winter2026.databinding.RegistrationBinding
 
 class LogInActivity : ComponentActivity() {
 
-    private lateinit var binding: RegistrationBinding
+    lateinit var binding: RegistrationBinding
+    lateinit var registrationDB: RegistrationDB
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // ✅ Initialize ONLY if test didn't inject mock
+        if (!::registrationDB.isInitialized) {
+            registrationDB = RegistrationDB()
+        }
 
         binding = RegistrationBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val registrationDB = RegistrationDB();
 
         binding.btnSignUp.setOnClickListener {
             // Replace 'LoginActivity' with the name of your target Activity class

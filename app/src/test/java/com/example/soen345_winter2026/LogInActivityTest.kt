@@ -1,60 +1,129 @@
 package com.example.soen345_winter2026
 
-import com.google.common.truth.Truth.assertThat
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import android.content.Intent
+import com.example.soen345_winter2026.database.RegistrationDB
+import io.mockk.*
+import org.junit.After
+import org.junit.Assert.*
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.Robolectric
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.Config
+import org.robolectric.shadows.ShadowToast
 
-/**
- * Unit tests for LogInActivity
- */
-@DisplayName("LogInActivity Tests")
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [30])
 class LogInActivityTest {
 
+    private lateinit var mockDb: RegistrationDB
+
+    @Before
+    fun setup() {
+        mockDb = mockk(relaxed = true)
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
+    }
+
+
     @Test
-    @DisplayName("Should have LogInActivity class")
-    fun `LogInActivity exists`() {
-        assertThat(LogInActivity::class).isNotNull()
+    fun `should show error when fields are empty`() {
+        val controller = Robolectric.buildActivity(LogInActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.btnLogin.performClick()
+
+        assertEquals(
+            "Fields cannot be empty",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
     }
 
     @Test
-    @DisplayName("Should be a ComponentActivity subclass")
-    fun `LogInActivity is ComponentActivity`() {
-        val isComponentActivity = androidx.activity.ComponentActivity::class.java.isAssignableFrom(LogInActivity::class.java)
-        assertThat(isComponentActivity).isTrue()
+    fun `should login successfully and navigate`() {
+        val controller = Robolectric.buildActivity(LogInActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.etEmail.setText("test@test.com")
+        activity.binding.etPassword.setText("123456")
+
+        val callbackSlot = slot<(Boolean, String?) -> Unit>()
+
+        every {
+            mockDb.logIn(any(), any(), capture(callbackSlot))
+        } answers {
+            callbackSlot.captured(true, null)
+        }
+
+        activity.binding.btnLogin.performClick()
+
+        verify {
+            mockDb.logIn("test@test.com", "123456", any())
+        }
+
+        assertEquals(
+            "Login successful",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
+
+        val startedIntent = shadowOf(activity).nextStartedActivity
+        assertEquals(MainPageActivity::class.java.name, startedIntent.component?.className)
     }
 
     @Test
-    fun `empty email should be invalid`() {
-        val emptyEmail = ""
-        assertThat(emptyEmail.isEmpty()).isTrue()
+    fun `should show error when login fails`() {
+        val controller = Robolectric.buildActivity(LogInActivity::class.java)
+        val activity = controller.get()
+
+        activity.registrationDB = mockDb
+        controller.setup()
+
+        activity.binding.etEmail.setText("test@test.com")
+        activity.binding.etPassword.setText("wrong")
+
+        val errorMsg = "Invalid credentials"
+        val callbackSlot = slot<(Boolean, String?) -> Unit>()
+
+        every {
+            mockDb.logIn(any(), any(), capture(callbackSlot))
+        } answers {
+            callbackSlot.captured(false, errorMsg)
+        }
+
+        activity.binding.btnLogin.performClick()
+
+        verify {
+            mockDb.logIn("test@test.com", "wrong", any())
+        }
+
+        assertEquals(
+            "Login failed: $errorMsg",
+            ShadowToast.getTextOfLatestToast()?.toString()
+        )
     }
 
     @Test
-    fun `empty password should be invalid`() {
-        val emptyPassword = ""
-        assertThat(emptyPassword.isEmpty()).isTrue()
-    }
+    fun `should navigate to SignUpActivity`() {
+        val controller = Robolectric.buildActivity(LogInActivity::class.java)
+        val activity = controller.get()
 
-    @Test
-    fun `valid credentials should pass`() {
-        val email = "test@example.com"
-        val password = "password123"
-        assertThat(email.isNotEmpty() && password.isNotEmpty()).isTrue()
-    }
+        activity.registrationDB = mockDb
+        controller.setup()
 
-    @Test
-    fun `should validate empty fields`() {
-        val emptyEmail = ""
-        val emptyPassword = ""
-        val fieldsEmpty = emptyEmail.isEmpty() || emptyPassword.isEmpty()
-        assertThat(fieldsEmpty).isTrue()
-    }
+        activity.binding.btnSignUp.performClick()
 
-    @Test
-    fun `should accept valid credentials`() {
-        val email = "test@example.com"
-        val password = "password123"
-        val isValid = email.isNotEmpty() && password.isNotEmpty()
-        assertThat(isValid).isTrue()
+        val intent = shadowOf(activity).nextStartedActivity
+        assertEquals(SignUpActivity::class.java.name, intent.component?.className)
     }
 }
