@@ -34,8 +34,11 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug
 
-      - name: Run unit tests with coverage
-        run: ./gradlew testDebugUnitTestCoverage
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Generate JaCoCo coverage report
+        run: ./gradlew jacocoTestReport
 
       - name: Upload test results
         if: always()
@@ -49,7 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
-          path: app/build/reports/coverage/test/debug/
+          path: app/build/reports/jacoco/jacocoTestReport/
 
       - name: SonarCloud analysis
         uses: SonarSource/sonarcloud-github-action@v3

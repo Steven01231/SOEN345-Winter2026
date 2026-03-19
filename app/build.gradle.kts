@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.gms.google-services")
+    id("jacoco")
 }
 
 android {
@@ -51,6 +52,41 @@ android {
 
 }
 
+
+jacoco {
+    toolVersion = "0.8.12"
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val exclusions = listOf(
+        "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
+        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**"
+    )
+
+    // Wildcard search — works regardless of AGP version / class output path
+    classDirectories.setFrom(
+        fileTree(buildDir) {
+            include("**/*.class")
+            exclude(exclusions)
+        }
+    )
+
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+
+    // Find exec/ec files wherever AGP placed them
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("**/*.exec", "**/*.ec")
+        }
+    )
+}
 
 dependencies {
     implementation(libs.androidx.core.ktx)
