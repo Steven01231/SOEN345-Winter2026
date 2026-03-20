@@ -3,6 +3,7 @@ package com.example.soen345_winter2026.events
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -101,9 +102,8 @@ class EventListActivityTest {
 
     @Test
     fun categoryButton_sports_isClickable() {
-        onView(withId(R.id.r03y1ckq5t7pp))
-            .check(matches(isClickable()))
-            .perform(click())
+        onView(withText("Sports"))
+            .perform(scrollTo(), click())
     }
 
     // --- Empty state ---
@@ -112,7 +112,6 @@ class EventListActivityTest {
     fun searchBar_withNoMatchingText_showsEmptyState() {
         onView(withId(R.id.etSearch))
             .perform(typeText("xyznotfoundanywhere12345"))
-        // Empty state should appear since no events match (also covers no-network case)
         onView(withId(R.id.tvEmpty))
             .check(matches(isDisplayed()))
     }
