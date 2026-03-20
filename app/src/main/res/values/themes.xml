@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.SOEN345Winter2026" parent="Theme.MaterialComponents.Light.NoActionBar" />
+    <style name="Theme.SOEN345Winter2026" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+    </style>
 
     <style name="cr8">
         <item name="cornerSize">8dp</item>
     </style>
+
 </resources>

@@ -7,11 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.soen345_winter2026"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.soen345_winter2026"
@@ -19,44 +15,43 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // Enable JUnit 5 for unit tests
-    testOptions {
-        unitTests.all {
-            it.useJUnitPlatform()
-        }
-        unitTests.isIncludeAndroidResources = true
-    }
-
     buildTypes {
-        release {
+        getByName("debug") {
+            enableUnitTestCoverage = true
+        }
+        getByName("release") {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
-        debug {
-            enableUnitTestCoverage = true
-            enableAndroidTestCoverage = true
-        }
     }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         compose = true
         viewBinding = true
     }
+
+    testOptions {
+        unitTests {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+            all { it.useJUnitPlatform() }
+        }
+    }
 }
 
-// JaCoCo configuration
 jacoco {
-    toolVersion = "0.8.11"
+    toolVersion = "0.8.12"
 }
 
 tasks.register<JacocoReport>("jacocoTestReport") {
@@ -65,32 +60,27 @@ tasks.register<JacocoReport>("jacocoTestReport") {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        csv.required.set(false)
-        xml.outputLocation.set(layout.buildDirectory.file("reports/jacoco/jacocoTestReport/jacocoTestReport.xml"))
-        html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/jacocoTestReport/html"))
     }
 
-    val fileFilter = listOf(
+    val exclusions = listOf(
         "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "android/**/*.*", "**/databinding/**",
-        "**/android/databinding/*Binding.class", "**/BR.*"
+        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**"
     )
 
-    val debugTree = fileTree("${layout.buildDirectory.get()}/intermediates/javac/debug/classes") {
-        exclude(fileFilter)
-    }
-    val kotlinDebugTree = fileTree("${layout.buildDirectory.get()}/tmp/kotlin-classes/debug") {
-        exclude(fileFilter)
-    }
+    classDirectories.setFrom(
+        fileTree(buildDir) {
+            include("**/*.class")
+            exclude(exclusions)
+        }
+    )
 
-    sourceDirectories.setFrom(files("${project.projectDir}/src/main/java"))
-    classDirectories.setFrom(files(debugTree, kotlinDebugTree))
-    executionData.setFrom(fileTree(layout.buildDirectory.get()) {
-        include(
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-        )
-    })
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+
+    executionData.setFrom(
+        fileTree(buildDir) {
+            include("**/*.exec", "**/*.ec")
+        }
+    )
 }
 
 dependencies {
@@ -103,13 +93,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Import the Firebase BoM
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
-
-    // Firebase Authentication
     implementation("com.google.firebase:firebase-auth")
-
-    // Cloud Firestore
     implementation("com.google.firebase:firebase-firestore")
 
     // UI
@@ -117,9 +103,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.11.0")
-
-    // Unit Testing - JUnit 4 (for compatibility)
-    testImplementation(libs.junit)
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Unit Testing - JUnit 5 (Jupiter)
     testImplementation(libs.junit.jupiter.api)
@@ -140,7 +124,7 @@ dependencies {
     // Flow Testing
     testImplementation(libs.turbine)
 
-    // Assertions - Google Truth (optional, cleaner assertions)
+    // Assertions - Google Truth
     testImplementation(libs.truth)
 
     // Instrumented Testing

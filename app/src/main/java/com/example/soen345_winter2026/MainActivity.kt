@@ -1,5 +1,6 @@
 package com.example.soen345_winter2026
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -15,21 +16,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.soen345_winter2026.ui.theme.SOEN345Winter2026Theme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.soen345_winter2026.databinding.RegistrationBinding
 
 class MainActivity : ComponentActivity() {
+
+    private lateinit var binding: RegistrationBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            SOEN345Winter2026Theme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
-        }
+
+
+
+        val intent = Intent(this, LogInActivity::class.java)
+        startActivity(intent)
 
         // Test Firebase connection
         testFirebaseConnection()
@@ -78,21 +77,5 @@ class MainActivity : ComponentActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    SOEN345Winter2026Theme {
-        Greeting("Android")
     }
 }
