@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.example.soen345_winter2026.database.RegistrationDB
 import com.example.soen345_winter2026.databinding.RegistrationBinding
+import com.example.soen345_winter2026.events.EventListActivity
 
 class LogInActivity : ComponentActivity() {
 
@@ -42,9 +43,10 @@ class LogInActivity : ComponentActivity() {
                 registrationDB.logIn(email, password) { success, error ->
                     if (success) {
                         Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                        // Navigate to next screen
-                        val intent = Intent(this, MainPageActivity::class.java)
+                        // Navigate to event list after login
+                        val intent = Intent(this, EventListActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
                     }
