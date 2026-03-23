@@ -15,8 +15,8 @@ class LogInActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // ✅ Initialize ONLY if test didn't inject mock
+
+        // Initialize ONLY if test didn't inject mock
         if (!::registrationDB.isInitialized) {
             registrationDB = RegistrationDB()
         }
@@ -25,7 +25,6 @@ class LogInActivity : ComponentActivity() {
         setContentView(binding.root)
 
         binding.btnSignUp.setOnClickListener {
-            // Replace 'LoginActivity' with the name of your target Activity class
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }

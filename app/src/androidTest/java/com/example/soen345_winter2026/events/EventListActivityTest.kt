@@ -3,7 +3,7 @@ package com.example.soen345_winter2026.events
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -101,11 +101,9 @@ class EventListActivityTest {
 
     @Test
     fun categoryButton_sports_isClickable() {
-        // Sports is the last button in the HorizontalScrollView — swipe to reveal it
-        onView(withId(R.id.r6f8umn2i5l6)).perform(swipeLeft())
+        // scrollTo() scrolls the parent HorizontalScrollView to fully reveal the button
         onView(withId(R.id.r03y1ckq5t7pp))
-            .check(matches(isDisplayed()))
-            .perform(click())
+            .perform(scrollTo(), click())
     }
 
     // --- Empty state ---

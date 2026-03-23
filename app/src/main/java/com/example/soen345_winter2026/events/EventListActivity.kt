@@ -1,6 +1,7 @@
 package com.example.soen345_winter2026.events
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -26,7 +27,7 @@ class EventListActivity : AppCompatActivity() {
         setupRecyclerView()
         setupSearch()
         setupCategoryButtons()
-        loadEvents()
+        FirestoreSeeder.seedIfEmpty { loadEvents() }
     }
 
     private fun setupRecyclerView() {
@@ -77,10 +78,12 @@ class EventListActivity : AppCompatActivity() {
         repository.fetchActiveEvents { events, error ->
             binding.progressBar.visibility = View.GONE
             if (error != null) {
+                Log.e("EventListActivity", "fetchActiveEvents failed: $error")
                 binding.tvEmpty.text = "Failed to load events."
                 binding.tvEmpty.visibility = View.VISIBLE
                 return@fetchActiveEvents
             }
+            Log.d("EventListActivity", "Fetched ${events.size} events")
             allEvents = events
             applyFilters()
         }
