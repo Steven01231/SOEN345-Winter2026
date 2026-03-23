@@ -1,14 +1,19 @@
 package com.example.soen345_winter2026.events
 
+import android.view.View
+import android.widget.HorizontalScrollView
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.UiController
+import androidx.test.espresso.ViewAction
 import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.soen345_winter2026.R
+import org.hamcrest.Matcher
+import org.hamcrest.Matchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -101,9 +106,31 @@ class EventListActivityTest {
 
     @Test
     fun categoryButton_sports_isClickable() {
-        // scrollTo() scrolls the parent HorizontalScrollView to fully reveal the button
+        // scrollTo() only works with vertical ScrollView, so use a custom action
+        // that programmatically scrolls the HorizontalScrollView to reveal the button
         onView(withId(R.id.r03y1ckq5t7pp))
-            .perform(scrollTo(), click())
+            .perform(scrollHorizontallyTo(), click())
+    }
+
+    /** Scrolls the nearest HorizontalScrollView ancestor so the target view is visible. */
+    private fun scrollHorizontallyTo(): ViewAction = object : ViewAction {
+        override fun getConstraints(): Matcher<View> =
+            allOf(isDescendantOfA(isAssignableFrom(HorizontalScrollView::class.java)))
+
+        override fun getDescription(): String = "scroll HorizontalScrollView to view"
+
+        override fun perform(uiController: UiController, view: View) {
+            var parent = view.parent
+            while (parent != null && parent !is HorizontalScrollView) {
+                parent = parent.parent
+            }
+            (parent as? HorizontalScrollView)?.let {
+                val location = IntArray(2)
+                view.getLocationInWindow(location)
+                it.smoothScrollTo(location[0], 0)
+                uiController.loopMainThreadUntilIdle()
+            }
+        }
     }
 
     // --- Empty state ---
