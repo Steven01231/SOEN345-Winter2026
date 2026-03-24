@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.example.soen345_winter2026.database.RegistrationDB
 import com.example.soen345_winter2026.databinding.RegistrationBinding
+import com.example.soen345_winter2026.events.EventListActivity
 
 class LogInActivity : ComponentActivity() {
 
@@ -14,8 +15,8 @@ class LogInActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        // ✅ Initialize ONLY if test didn't inject mock
+
+        // Initialize ONLY if test didn't inject mock
         if (!::registrationDB.isInitialized) {
             registrationDB = RegistrationDB()
         }
@@ -24,7 +25,6 @@ class LogInActivity : ComponentActivity() {
         setContentView(binding.root)
 
         binding.btnSignUp.setOnClickListener {
-            // Replace 'LoginActivity' with the name of your target Activity class
             val intent = Intent(this, SignUpActivity::class.java)
             startActivity(intent)
         }
@@ -42,9 +42,10 @@ class LogInActivity : ComponentActivity() {
                 registrationDB.logIn(email, password) { success, error ->
                     if (success) {
                         Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                        // Navigate to next screen
-                        val intent = Intent(this, MainPageActivity::class.java)
+                        // Navigate to event list after login
+                        val intent = Intent(this, EventListActivity::class.java)
                         startActivity(intent)
+                        finish()
                     } else {
                         Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
                     }

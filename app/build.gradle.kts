@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.soen345_winter2026"
-    compileSdk = 36   // ✅ just an integer
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.soen345_winter2026"
@@ -48,9 +48,7 @@ android {
             all { it.useJUnitPlatform() }
         }
     }
-
 }
-
 
 jacoco {
     toolVersion = "0.8.12"
@@ -69,7 +67,6 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**"
     )
 
-    // Wildcard search — works regardless of AGP version / class output path
     classDirectories.setFrom(
         fileTree(buildDir) {
             include("**/*.class")
@@ -79,7 +76,6 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
 
-    // Find exec/ec files wherever AGP placed them
     executionData.setFrom(
         fileTree(buildDir) {
             include("**/*.exec", "**/*.ec")
@@ -97,14 +93,17 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Import the Firebase BoM
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:34.9.0"))
-
-    // Firebase Authentication
     implementation("com.google.firebase:firebase-auth")
-
-    // Cloud Firestore
     implementation("com.google.firebase:firebase-firestore")
+
+    // UI
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("androidx.cardview:cardview:1.0.0")
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.appcompat:appcompat:1.6.1")
 
     // Unit Testing - JUnit 5 (Jupiter)
     testImplementation(libs.junit.jupiter.api)
@@ -125,7 +124,7 @@ dependencies {
     // Flow Testing
     testImplementation(libs.turbine)
 
-    // Assertions - Google Truth (optional, cleaner assertions)
+    // Assertions - Google Truth
     testImplementation(libs.truth)
 
     // Instrumented Testing
@@ -139,9 +138,4 @@ dependencies {
     // Debug
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-    implementation("androidx.appcompat:appcompat:1.6.1")
-
-    implementation("com.google.android.material:material:1.11.0")
-
 }
