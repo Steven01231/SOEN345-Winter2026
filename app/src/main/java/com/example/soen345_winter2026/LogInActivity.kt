@@ -52,5 +52,35 @@ class LogInActivity : ComponentActivity() {
                 }
             }
         }
-    }
+
+        binding.adminBtnLogin.setOnClickListener {
+            val email = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString()
+
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            } else {
+                registrationDB.adminLogIn(email, password) { success, isAdmin, error ->
+                    if (success) {
+                        Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+
+                        if (isAdmin) {
+                            // Navigate to Admin specific activity
+                            val intent = Intent(this, AdminPageActivity::class.java)
+                            startActivity(intent)
+                        } else {
+                            // Navigate to regular User activity
+                            val intent = Intent(this, EventListActivity::class.java)
+                            startActivity(intent)
+                        }
+                        finish()
+                    } else {
+                        Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
+        }
+
 }
