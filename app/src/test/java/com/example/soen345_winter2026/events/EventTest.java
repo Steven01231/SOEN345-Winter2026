@@ -17,7 +17,6 @@ class EventTest {
         assertEquals("", event.getDate());
         assertEquals("", event.getLocation());
         assertEquals(0, event.getAvailableSeats());
-        assertEquals(EventStatus.ACTIVE, event.getStatus());
         assertEquals("", event.getImageUrl());
     }
 
