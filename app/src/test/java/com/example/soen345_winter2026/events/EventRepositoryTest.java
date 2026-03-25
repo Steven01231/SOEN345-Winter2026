@@ -59,12 +59,12 @@ class EventRepositoryTest {
     @Test
     void fetchActiveEvents_onSuccess_returnsEvents() {
         DocumentSnapshot doc1 = mock(DocumentSnapshot.class);
-        Event event1 = new Event("", "Concert", "Concert", "June 1", "Park", 100, "active", "");
+        Event event1 = new Event("", "Concert", "Concert", "June 1", "Park", 100, "description", EventStatus.ACTIVE, null, null, "");
         when(doc1.toObject(Event.class)).thenReturn(event1);
         when(doc1.getId()).thenReturn("doc1");
 
         DocumentSnapshot doc2 = mock(DocumentSnapshot.class);
-        Event event2 = new Event("", "Movie Night", "Movie", "July 1", "Cinema", 50, "active", "");
+        Event event2 = new Event("", "Movie Night", "Movie", "July 1", "Cinema", 50, "description", EventStatus.ACTIVE, null, null, "");
         when(doc2.toObject(Event.class)).thenReturn(event2);
         when(doc2.getId()).thenReturn("doc2");
 
@@ -77,9 +77,9 @@ class EventRepositoryTest {
         repository.fetchActiveEvents((events, error) -> {
             assertNull(error);
             assertEquals(2, events.size());
-            assertEquals("doc1", events.get(0).getId());
+            assertEquals("doc1", events.get(0).getEventID());
             assertEquals("Concert", events.get(0).getTitle());
-            assertEquals("doc2", events.get(1).getId());
+            assertEquals("doc2", events.get(1).getEventID());
             assertEquals("Movie Night", events.get(1).getTitle());
         });
 
@@ -95,7 +95,7 @@ class EventRepositoryTest {
         when(doc1.getId()).thenReturn("doc1");
 
         DocumentSnapshot doc2 = mock(DocumentSnapshot.class);
-        Event event2 = new Event("", "Movie", "Movie", "July 1", "Cinema", 50, "active", "");
+        Event event2 = new Event("", "Movie", "Movie", "July 1", "Cinema", 50, "description", EventStatus.ACTIVE, null, null, "");
         when(doc2.toObject(Event.class)).thenReturn(event2);
         when(doc2.getId()).thenReturn("doc2");
 
@@ -108,7 +108,7 @@ class EventRepositoryTest {
         repository.fetchActiveEvents((events, error) -> {
             assertNull(error);
             assertEquals(1, events.size());
-            assertEquals("doc2", events.get(0).getId());
+            assertEquals("doc2", events.get(0).getEventID());
         });
 
         verify(mockTask).addOnSuccessListener(captor.capture());
@@ -154,7 +154,7 @@ class EventRepositoryTest {
     @Test
     void fetchActiveEvents_onSuccess_setsDocumentId() {
         DocumentSnapshot doc = mock(DocumentSnapshot.class);
-        Event event = new Event("", "Test", "Sports", "Jan 1", "Venue", 10, "active", "");
+        Event event = new Event("", "Test", "Sports", "Jan 1", "Venue", 10, "description", EventStatus.ACTIVE, null, null, "");
         when(doc.toObject(Event.class)).thenReturn(event);
         when(doc.getId()).thenReturn("firestore-id-123");
 
@@ -166,7 +166,7 @@ class EventRepositoryTest {
 
         repository.fetchActiveEvents((events, error) -> {
             assertEquals(1, events.size());
-            assertEquals("firestore-id-123", events.get(0).getId());
+            assertEquals("firestore-id-123", events.get(0).getEventID());
         });
 
         verify(mockTask).addOnSuccessListener(captor.capture());

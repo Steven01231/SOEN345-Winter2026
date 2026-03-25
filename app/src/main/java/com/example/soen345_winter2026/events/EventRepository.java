@@ -36,7 +36,7 @@ public class EventRepository {
                     for (DocumentSnapshot doc : result.getDocuments()) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            event.setId(doc.getId());
+                            event.setEventID(doc.getId());
                             events.add(event);
                         }
                     }
