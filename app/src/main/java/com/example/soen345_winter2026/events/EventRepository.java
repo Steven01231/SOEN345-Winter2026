@@ -29,14 +29,14 @@ public class EventRepository {
 
     public void fetchActiveEvents(Callback callback) {
         db.collection("events")
-                .whereEqualTo("status", "active")
+                .whereEqualTo("status", EventStatus.ACTIVE)
                 .get()
                 .addOnSuccessListener(result -> {
                     List<Event> events = new ArrayList<>();
                     for (DocumentSnapshot doc : result.getDocuments()) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            event.setId(doc.getId());
+                            event.setEventID(doc.getId());
                             events.add(event);
                         }
                     }
