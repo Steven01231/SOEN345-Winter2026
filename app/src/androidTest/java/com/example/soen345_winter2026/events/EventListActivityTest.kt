@@ -125,7 +125,9 @@ class EventListActivityTest {
                 parent = parent.parent
             }
             (parent as? HorizontalScrollView)?.let {
-                it.scrollTo(view.left, 0)
+                val location = IntArray(2)
+                view.getLocationInWindow(location)
+                it.smoothScrollTo(location[0], 0)
                 uiController.loopMainThreadUntilIdle()
             }
         }
