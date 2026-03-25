@@ -38,7 +38,7 @@ class EventRepositoryTest {
         mockTask = mock(Task.class);
 
         when(mockDb.collection("events")).thenReturn(mockCollection);
-        when(mockCollection.whereEqualTo(eq("status"), eq("active"))).thenReturn(mockQuery);
+        when(mockCollection.whereEqualTo(eq("status"), eq(EventStatus.ACTIVE))).thenReturn(mockQuery);
         when(mockQuery.get()).thenReturn(mockTask);
         when(mockTask.addOnSuccessListener(any())).thenReturn(mockTask);
         when(mockTask.addOnFailureListener(any())).thenReturn(mockTask);
@@ -51,7 +51,7 @@ class EventRepositoryTest {
         repository.fetchActiveEvents((events, error) -> {});
 
         verify(mockDb).collection("events");
-        verify(mockCollection).whereEqualTo("status", "active");
+        verify(mockCollection).whereEqualTo("status", EventStatus.ACTIVE);
         verify(mockQuery).get();
     }
 
