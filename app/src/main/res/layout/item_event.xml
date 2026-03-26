@@ -132,8 +132,16 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Available: 0 seats" />
-
         </LinearLayout>
+        <Button
+            android:id="@+id/btnBook"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Book"
+            android:textAllCaps="false"
+            android:backgroundTint="#3B82F6"
+            android:textColor="#FFFFFF"/>
     </LinearLayout>
 
 </LinearLayout>
