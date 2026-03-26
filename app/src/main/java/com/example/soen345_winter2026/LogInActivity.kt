@@ -62,18 +62,16 @@ class LogInActivity : ComponentActivity() {
             } else {
                 registrationDB.adminLogIn(email, password) { success, isAdmin, error ->
                     if (success) {
-                        Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-
                         if (isAdmin) {
                             // Navigate to Admin specific activity
+                            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                             val intent = Intent(this, AdminPageActivity::class.java)
                             startActivity(intent)
+                            finish()
                         } else {
                             // Navigate to regular User activity
-                            val intent = Intent(this, EventListActivity::class.java)
-                            startActivity(intent)
+                            Toast.makeText(this, "You are not an admin!", Toast.LENGTH_SHORT).show()
                         }
-                        finish()
                     } else {
                         Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
                     }

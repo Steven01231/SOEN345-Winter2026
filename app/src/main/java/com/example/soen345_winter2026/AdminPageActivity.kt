@@ -43,6 +43,11 @@ class AdminPageActivity : AppCompatActivity() {
             }
         }
 
+        binding.fabAddEvent.setOnClickListener {
+            val intent = Intent(this, AddEventActivity::class.java)
+            startActivity(intent)
+        }
+
         // 4. Floating Action Button logic
         /*binding.fabAddEvent.setOnClickListener {
             Toast.makeText(this, "Opening Event Creator...", Toast.LENGTH_SHORT).show()
