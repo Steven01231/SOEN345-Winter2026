@@ -16,7 +16,7 @@ object FirestoreSeeder {
             "date" to "2026-04-10",
             "location" to "Montreal, QC",
             "availableSeats" to 200,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -25,7 +25,7 @@ object FirestoreSeeder {
             "date" to "2026-05-03",
             "location" to "Parc Jean-Drapeau, Montreal",
             "availableSeats" to 500,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -34,7 +34,7 @@ object FirestoreSeeder {
             "date" to "2026-04-18",
             "location" to "Cineplex Odeon, Montreal",
             "availableSeats" to 120,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -43,7 +43,7 @@ object FirestoreSeeder {
             "date" to "2026-04-25",
             "location" to "Cinema du Parc, Montreal",
             "availableSeats" to 80,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -52,7 +52,7 @@ object FirestoreSeeder {
             "date" to "2026-04-12",
             "location" to "Bell Centre, Montreal",
             "availableSeats" to 0,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -61,7 +61,7 @@ object FirestoreSeeder {
             "date" to "2026-06-14",
             "location" to "Circuit Gilles Villeneuve, Montreal",
             "availableSeats" to 300,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -70,7 +70,7 @@ object FirestoreSeeder {
             "date" to "2026-07-01",
             "location" to "Paris, France",
             "availableSeats" to 40,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         ),
         mapOf(
@@ -79,7 +79,7 @@ object FirestoreSeeder {
             "date" to "2026-04-05",
             "location" to "Tokyo, Japan",
             "availableSeats" to 25,
-            "status" to EventStatus.ACTIVE,
+            "status" to "active",
             "imageUrl" to ""
         )
     )
