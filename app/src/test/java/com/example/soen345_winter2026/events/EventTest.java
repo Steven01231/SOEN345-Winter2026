@@ -11,13 +11,12 @@ class EventTest {
     @Test
     void noArgConstructor_setsDefaults() {
         Event event = new Event();
-        assertEquals("", event.getId());
+        assertEquals("", event.getEventID());
         assertEquals("", event.getTitle());
         assertEquals("", event.getCategory());
         assertEquals("", event.getDate());
         assertEquals("", event.getLocation());
         assertEquals(0, event.getAvailableSeats());
-        assertEquals("active", event.getStatus());
         assertEquals("", event.getImageUrl());
     }
 
@@ -26,24 +25,25 @@ class EventTest {
     @Test
     void fullConstructor_setsAllFields() {
         Event event = new Event("id1", "Jazz Night", "Concert", "2026-04-10",
-                "Montreal", 200, "active", "http://img.png");
-        assertEquals("id1", event.getId());
+                "Montreal", 200, "description", EventStatus.ACTIVE, null, null, "http://img.png");
+        assertEquals("id1", event.getEventID());
         assertEquals("Jazz Night", event.getTitle());
         assertEquals("Concert", event.getCategory());
         assertEquals("2026-04-10", event.getDate());
         assertEquals("Montreal", event.getLocation());
         assertEquals(200, event.getAvailableSeats());
-        assertEquals("active", event.getStatus());
+        assertEquals("description", event.getDescription());
+        assertEquals(EventStatus.ACTIVE, event.getStatus());
         assertEquals("http://img.png", event.getImageUrl());
     }
 
     // --- Setters ---
 
     @Test
-    void setId_updatesId() {
+    void setEventID_updatesId() {
         Event event = new Event();
-        event.setId("abc");
-        assertEquals("abc", event.getId());
+        event.setEventID("abc");
+        assertEquals("abc", event.getEventID());
     }
 
     @Test
@@ -84,8 +84,8 @@ class EventTest {
     @Test
     void setStatus_updatesStatus() {
         Event event = new Event();
-        event.setStatus("cancelled");
-        assertEquals("cancelled", event.getStatus());
+        event.setStatus(EventStatus.CANCELLED);
+        assertEquals(EventStatus.CANCELLED, event.getStatus());
     }
 
     @Test
