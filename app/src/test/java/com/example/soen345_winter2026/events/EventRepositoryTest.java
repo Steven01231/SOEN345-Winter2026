@@ -195,4 +195,124 @@ class EventRepositoryTest {
         verify(mockTask).addOnSuccessListener(captor.capture());
         captor.getValue().onSuccess(mockSnapshot);
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void fetchActiveEvents_onSuccess_parsesPastStatusCorrectly() {
+        DocumentSnapshot doc = mock(DocumentSnapshot.class);
+        when(doc.getId()).thenReturn("doc1");
+        when(doc.getString("title")).thenReturn("Past Event");
+        when(doc.getString("category")).thenReturn("Movie");
+        when(doc.getString("date")).thenReturn("Jan 1");
+        when(doc.getString("location")).thenReturn("Cinema");
+        when(doc.getString("description")).thenReturn("desc");
+        when(doc.getString("imageUrl")).thenReturn("");
+        when(doc.getLong("availableSeats")).thenReturn(10L);
+        when(doc.getString("status")).thenReturn("past");
+
+        QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
+        when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+        ArgumentCaptor<OnSuccessListener<QuerySnapshot>> captor =
+                ArgumentCaptor.forClass(OnSuccessListener.class);
+
+        repository.fetchActiveEvents((events, error) -> {
+            assertNull(error);
+            assertEquals(1, events.size());
+            assertEquals(EventStatus.PAST, events.get(0).getStatus());
+        });
+
+        verify(mockTask).addOnSuccessListener(captor.capture());
+        captor.getValue().onSuccess(mockSnapshot);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void fetchActiveEvents_onSuccess_parsesCancelledStatusCorrectly() {
+        DocumentSnapshot doc = mock(DocumentSnapshot.class);
+        when(doc.getId()).thenReturn("doc2");
+        when(doc.getString("title")).thenReturn("Cancelled Event");
+        when(doc.getString("category")).thenReturn("Concert");
+        when(doc.getString("date")).thenReturn("Feb 1");
+        when(doc.getString("location")).thenReturn("Hall");
+        when(doc.getString("description")).thenReturn("desc");
+        when(doc.getString("imageUrl")).thenReturn("");
+        when(doc.getLong("availableSeats")).thenReturn(0L);
+        when(doc.getString("status")).thenReturn("cancelled");
+
+        QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
+        when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+        ArgumentCaptor<OnSuccessListener<QuerySnapshot>> captor =
+                ArgumentCaptor.forClass(OnSuccessListener.class);
+
+        repository.fetchActiveEvents((events, error) -> {
+            assertNull(error);
+            assertEquals(1, events.size());
+            assertEquals(EventStatus.CANCELLED, events.get(0).getStatus());
+        });
+
+        verify(mockTask).addOnSuccessListener(captor.capture());
+        captor.getValue().onSuccess(mockSnapshot);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void fetchActiveEvents_onSuccess_nullStatus_returnsNullStatus() {
+        DocumentSnapshot doc = mock(DocumentSnapshot.class);
+        when(doc.getId()).thenReturn("doc3");
+        when(doc.getString("title")).thenReturn("Unknown Status Event");
+        when(doc.getString("category")).thenReturn("Travel");
+        when(doc.getString("date")).thenReturn("Mar 1");
+        when(doc.getString("location")).thenReturn("Tokyo");
+        when(doc.getString("description")).thenReturn("desc");
+        when(doc.getString("imageUrl")).thenReturn("");
+        when(doc.getLong("availableSeats")).thenReturn(5L);
+        when(doc.getString("status")).thenReturn(null);
+
+        QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
+        when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+        ArgumentCaptor<OnSuccessListener<QuerySnapshot>> captor =
+                ArgumentCaptor.forClass(OnSuccessListener.class);
+
+        repository.fetchActiveEvents((events, error) -> {
+            assertNull(error);
+            assertEquals(1, events.size());
+            assertNull(events.get(0).getStatus());
+        });
+
+        verify(mockTask).addOnSuccessListener(captor.capture());
+        captor.getValue().onSuccess(mockSnapshot);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void fetchActiveEvents_onSuccess_unknownStatus_returnsNullStatus() {
+        DocumentSnapshot doc = mock(DocumentSnapshot.class);
+        when(doc.getId()).thenReturn("doc4");
+        when(doc.getString("title")).thenReturn("Weird Event");
+        when(doc.getString("category")).thenReturn("Sports");
+        when(doc.getString("date")).thenReturn("Apr 1");
+        when(doc.getString("location")).thenReturn("Stadium");
+        when(doc.getString("description")).thenReturn("desc");
+        when(doc.getString("imageUrl")).thenReturn("");
+        when(doc.getLong("availableSeats")).thenReturn(20L);
+        when(doc.getString("status")).thenReturn("weird");
+
+        QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
+        when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+        ArgumentCaptor<OnSuccessListener<QuerySnapshot>> captor =
+                ArgumentCaptor.forClass(OnSuccessListener.class);
+
+        repository.fetchActiveEvents((events, error) -> {
+            assertNull(error);
+            assertEquals(1, events.size());
+            assertNull(events.get(0).getStatus());
+        });
+
+        verify(mockTask).addOnSuccessListener(captor.capture());
+        captor.getValue().onSuccess(mockSnapshot);
+    }
 }
