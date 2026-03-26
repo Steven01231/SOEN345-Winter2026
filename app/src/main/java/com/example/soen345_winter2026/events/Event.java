@@ -18,6 +18,7 @@ public class Event {
     private LocalDateTime startTime = null;
     private LocalDateTime endTime = null;
     private String imageUrl = "";
+    private String creatorEmail = "";
 
     // Required by Firestore
     public Event() {}
@@ -64,4 +65,8 @@ public class Event {
     public void setStartTime(LocalDateTime startTime) { this.startTime = startTime; }
     public void setEndTime(LocalDateTime endTime) { this.endTime = endTime; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
+
+    public String getCreatorEmail() { return creatorEmail; }
+
+    public void setCreatorEmail(String creatorEmail) { this.creatorEmail = creatorEmail; }
 }

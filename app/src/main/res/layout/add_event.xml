@@ -75,7 +75,7 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:weightSum="1">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -92,22 +92,6 @@
                             android:focusable="false"
                             android:clickable="true" />
                     </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="8dp">
-                        <TextView style="@style/LabelStyle" android:text="Time *" />
-                        <EditText
-                            android:id="@+id/etTime"
-                            style="@style/InputStyle"
-                            android:drawableStart="@drawable/ic_time"
-                            android:drawablePadding="8dp"
-                            android:focusable="false"
-                            android:clickable="true" />
-                    </LinearLayout>
                 </LinearLayout>
 
                 <TextView style="@style/LabelStyle" android:text="Capacity *" />
@@ -116,17 +100,6 @@
                     style="@style/InputStyle"
                     android:hint="Enter total seats"
                     android:inputType="number" />
-
-                <TextView style="@style/LabelStyle" android:text="Description *" />
-                <EditText
-                    android:id="@+id/etDescription"
-                    style="@style/InputStyle"
-                    android:layout_height="wrap_content"
-                    android:minHeight="100dp"
-                    android:gravity="top"
-                    android:hint="Enter event description"
-                    android:inputType="textMultiLine"
-                    android:paddingTop="12dp" />
 
                 <TextView style="@style/LabelStyle" android:text="Event Image" />
                 <LinearLayout
