@@ -1,13 +1,15 @@
 package com.example.soen345_winter2026.events;
 
+import android.os.Build;
 import java.time.LocalDateTime;
+
 /**
  * Represents an event fetched from Firestore.
  * Firestore requires a no-arg constructor and setters to deserialize documents.
  */
 public class Event {
 
-    private String eventID = ""; // preferably email of user who made the event & number
+    private String eventID = "";
     private String title = "";
     private String category = "";
     private String date = "";
@@ -20,15 +22,18 @@ public class Event {
     private String endTime = "";
     private String imageUrl = "";
     private String creatorEmail = "";
+    private int ticketPrice = 0; // stored as int, divide by 100 to display (e.g. 999 → $9.99)
 
     // Required by Firestore
     public Event() {}
 
-    public Event(String eventID, String title, 
-        String category, String date, String location, 
-        int totalSeats, int availableSeats, 
-        String description, EventStatus status,
-                 LocalDateTime startTime, LocalDateTime endTime, String imageUrl, String creatorEmail) {
+    public Event(String eventID, String title,
+                 String category, String date, String location,
+                 int totalSeats, int availableSeats,
+                 String description, EventStatus status,
+                 LocalDateTime startTime, LocalDateTime endTime,
+                 String imageUrl, String creatorEmail,
+                 int ticketPrice) {
         this.eventID = eventID;
         this.title = title;
         this.category = category;
@@ -38,10 +43,12 @@ public class Event {
         this.availableSeats = availableSeats;
         this.status = status;
         this.date = date;
-        this.startTime = startTime.toString();
-        this.endTime = endTime.toString();
+        // null-safe: avoids NullPointerException on API < 26 or when times are not provided
+        this.startTime = startTime != null ? startTime.toString() : "";
+        this.endTime = endTime != null ? endTime.toString() : "";
         this.imageUrl = imageUrl;
         this.creatorEmail = creatorEmail;
+        this.ticketPrice = ticketPrice;
     }
 
     // Getters
@@ -56,17 +63,19 @@ public class Event {
     public String getDate() { return date; }
     public LocalDateTime getStartDateTime() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return startTime != null ? LocalDateTime.parse(startTime) : null;
+            return (startTime != null && !startTime.isEmpty()) ? LocalDateTime.parse(startTime) : null;
         }
         return null;
     }
     public LocalDateTime getEndDateTime() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            return endTime != null ? LocalDateTime.parse(endTime) : null;
+            return (endTime != null && !endTime.isEmpty()) ? LocalDateTime.parse(endTime) : null;
         }
         return null;
     }
     public String getImageUrl() { return imageUrl; }
+    public String getCreatorEmail() { return creatorEmail; }
+    public int getTicketPrice() { return ticketPrice; }
     public boolean isSoldOut() { return availableSeats == 0; }
 
     // Setters (required by Firestore deserialization)
@@ -86,8 +95,7 @@ public class Event {
         this.endTime = endTime != null ? endTime.toString() : "";
     }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
-
-    public String getCreatorEmail() { return creatorEmail; }
-
     public void setCreatorEmail(String creatorEmail) { this.creatorEmail = creatorEmail; }
+    public void setTicketPrice(int ticketPrice) { this.ticketPrice = ticketPrice; }
+
 }

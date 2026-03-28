@@ -1,22 +1,25 @@
 package com.example.soen345_winter2026
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.example.soen345_winter2026.databinding.AddEventBinding
 import com.example.soen345_winter2026.events.Event
 import com.example.soen345_winter2026.events.EventStatus
 import com.google.firebase.auth.FirebaseAuth
-import java.util.*
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.firestore.FirebaseFirestore
-import java.util.UUID
+import com.google.firebase.storage.FirebaseStorage
+import java.time.LocalDateTime
+import java.util.*
 
 class AddEventActivity : AppCompatActivity() {
 
@@ -26,9 +29,8 @@ class AddEventActivity : AppCompatActivity() {
 
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
-            selectedImageUri = it // Save the URI to our variable
+            selectedImageUri = it
 
-            // Update UI
             binding.ivImagePreview.setImageURI(it)
             binding.ivImagePreview.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
             binding.ivImagePreview.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
@@ -46,34 +48,31 @@ class AddEventActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // 1. Gallery Picker Trigger
+        // Gallery Picker
         binding.layoutUploadImage.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
 
-        // 2. Date Picker
+        // Date Picker
         binding.etDate.setOnClickListener {
             showDatePicker()
         }
 
-        // 3. The "Create Event" Button (Now linked to Firebase)
+        // Start Time Picker
+        binding.etStartTime.setOnClickListener {
+            showTimePicker { time -> binding.etStartTime.setText(time) }
+        }
+
+        // End Time Picker
+        binding.etEndTime.setOnClickListener {
+            showTimePicker { time -> binding.etEndTime.setText(time) }
+        }
+
+        // Create Event Button
         binding.btnCreateEvent.setOnClickListener {
-            val title = binding.etEventTitle.text.toString().trim()
-            val capacity = binding.etCapacity.text.toString().trim()
-
-            // Simple validation before starting the cloud upload
-            if (title.isEmpty()) {
-                binding.etEventTitle.error = "Title is required"
-                return@setOnClickListener
+            if (validateForm()) {
+                saveEventToDatabase()
             }
-
-            if (capacity.isEmpty()) {
-                binding.etCapacity.error = "Please specify capacity"
-                return@setOnClickListener
-            }
-
-            // Call the asynchronous upload/save chain
-            saveEventToDatabase()
         }
 
         binding.btnBack.setOnClickListener {
@@ -85,47 +84,112 @@ class AddEventActivity : AppCompatActivity() {
         }
     }
 
+    private fun validateForm(): Boolean {
+        val title       = binding.etEventTitle.text.toString().trim()
+        val date        = binding.etDate.text.toString().trim()
+        val startTime   = binding.etStartTime.text.toString().trim()
+        val endTime     = binding.etEndTime.text.toString().trim()
+        val capacity    = binding.etCapacity.text.toString().trim()
+        val ticketPrice = binding.etTicketPrice.text.toString().trim()
+
+        if (title.isEmpty()) {
+            binding.etEventTitle.error = "Title is required"
+            return false
+        }
+        if (date.isEmpty()) {
+            binding.etDate.error = "Date is required"
+            return false
+        }
+        if (startTime.isEmpty()) {
+            binding.etStartTime.error = "Start time is required"
+            return false
+        }
+        if (endTime.isEmpty()) {
+            binding.etEndTime.error = "End time is required"
+            return false
+        }
+        if (capacity.isEmpty()) {
+            binding.etCapacity.error = "Capacity is required"
+            return false
+        }
+        if (ticketPrice.isEmpty()) {
+            binding.etTicketPrice.error = "Ticket price is required"
+            return false
+        }
+        return true
+    }
+
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
-        val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, month, day ->
-            // Format: YYYY-MM-DD is usually better for databases
-            val formattedDate = String.format("%d-%02d-%02d", year, month + 1, day)
-            binding.etDate.setText(formattedDate)
-        }
-
         DatePickerDialog(
-            this, dateSetListener,
+            this,
+            { _, year, month, day ->
+                binding.etDate.setText(String.format("%d-%02d-%02d", year, month + 1, day))
+            },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         ).show()
     }
 
-    private fun saveEventToDatabase() {
-        val title = binding.etEventTitle.text.toString()
-        val category = binding.etCategory.text.toString()
-        val location = binding.etLocation.text.toString()
-        val date = binding.etDate.text.toString()
-        val capacity = binding.etCapacity.text.toString().toIntOrNull() ?: 0
+    private fun showTimePicker(onTimeSet: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        TimePickerDialog(
+            this,
+            { _, hour, minute ->
+                onTimeSet(String.format("%02d:%02d", hour, minute))
+            },
+            calendar.get(Calendar.HOUR_OF_DAY),
+            calendar.get(Calendar.MINUTE),
+            true // 24hr format
+        ).show()
+    }
 
-        if (title.isEmpty()) {
-            binding.etEventTitle.error = "Title required"
-            return
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun toLocalDateTime(date: String, time: String): LocalDateTime? {
+        return try {
+            LocalDateTime.parse("${date}T${time}")
+        } catch (e: Exception) {
+            null
         }
+    }
+
+    private fun saveEventToDatabase() {
+        val title       = binding.etEventTitle.text.toString().trim()
+        val category    = binding.etCategory.text.toString().trim()
+        val location    = binding.etLocation.text.toString().trim()
+        val date        = binding.etDate.text.toString().trim()
+        val startTime   = binding.etStartTime.text.toString().trim()
+        val endTime     = binding.etEndTime.text.toString().trim()
+        val capacity    = binding.etCapacity.text.toString().toIntOrNull() ?: 0
+        val ticketPrice = binding.etTicketPrice.text.toString().toIntOrNull() ?: 0
+        val description = binding.etDescription.text.toString().trim()
+
+        // Convert HH:MM + date into LocalDateTime (requires API 26+)
+        val startDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            toLocalDateTime(date, startTime)
+        } else null
+
+        val endDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            toLocalDateTime(date, endTime)
+        } else null
 
         binding.btnCreateEvent.isEnabled = false
         Toast.makeText(this, "Uploading event...", Toast.LENGTH_SHORT).show()
 
-        // 1. If user picked an image, upload to Firebase Storage first
         if (selectedImageUri != null) {
             val storageRef = FirebaseStorage.getInstance().reference
             val imageRef = storageRef.child("event_images/${UUID.randomUUID()}.jpg")
 
             imageRef.putFile(selectedImageUri!!)
                 .addOnSuccessListener {
-                    // 2. Get the public download URL
                     imageRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                        uploadToFirestore(title, category, location, date, capacity, downloadUri.toString())
+                        uploadToFirestore(
+                            title, category, location, date,
+                            startDateTime, endDateTime,
+                            capacity, ticketPrice, description,
+                            downloadUri.toString()
+                        )
                     }
                 }
                 .addOnFailureListener {
@@ -133,33 +197,43 @@ class AddEventActivity : AppCompatActivity() {
                     Toast.makeText(this, "Image upload failed", Toast.LENGTH_SHORT).show()
                 }
         } else {
-            // No image selected, upload with empty URL
-            uploadToFirestore(title, category, location, date, capacity, "")
+            uploadToFirestore(
+                title, category, location, date,
+                startDateTime, endDateTime,
+                capacity, ticketPrice, description,
+                ""
+            )
         }
     }
 
-    private fun uploadToFirestore(title: String, cat: String, loc: String, date: String, cap: Int, downloadUrl: String) {
+    private fun uploadToFirestore(
+        title: String,
+        category: String,
+        location: String,
+        date: String,
+        startDateTime: LocalDateTime?,
+        endDateTime: LocalDateTime?,
+        capacity: Int,
+        ticketPrice: Int,
+        description: String,
+        downloadUrl: String
+    ) {
         val db = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()
-
         val adminEmail = auth.currentUser?.email ?: "unknown_admin"
-
         val uniqueId = "${adminEmail.replace(".", "_")}_${System.currentTimeMillis()}"
 
         val newEvent = Event(
-            uniqueId, title, cat, date, loc,
-            cap, "Event Description", EventStatus.ACTIVE,
-            null, null, downloadUrl
-        ).apply {
-            // Associate the admin email with this event
-            this.creatorEmail = adminEmail
-        }
+            uniqueId, title, category, date, location,
+            capacity, capacity, description, EventStatus.ACTIVE,
+            startDateTime, endDateTime, downloadUrl, adminEmail, ticketPrice
+        )
 
         db.collection("events")
             .document(uniqueId)
             .set(newEvent)
             .addOnSuccessListener {
-                Toast.makeText(this, "Event Created by $adminEmail", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Event created successfully!", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener {

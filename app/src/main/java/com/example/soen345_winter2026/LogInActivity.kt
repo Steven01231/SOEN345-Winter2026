@@ -37,7 +37,7 @@ class LogInActivity : ComponentActivity() {
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
             }else {
-                Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Attempting to log in...", Toast.LENGTH_SHORT).show()
 
                 registrationDB.logIn(email, password) { success, error ->
                     if (success) {

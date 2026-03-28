@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E9E9E9">
+
+    <View
+        android:id="@+id/top_rectangle"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="#2196F3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/analytics_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="16dp"
+        android:text="Analytics"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@+id/top_rectangle"
+        app:layout_constraintTop_toTopOf="@+id/top_rectangle" />
+
+    <TextView
+        android:id="@+id/analytics_top_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="10dp"
+        android:text="Monitor your platform performance"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/analytics_title" />
+
+    <View
+        android:id="@+id/square_four"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        android:visibility="invisible"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/top_rectangle" />
+
+    <View
+        android:id="@+id/square_booking"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/rounded_rect"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="@+id/square_four"
+        app:layout_constraintTop_toBottomOf="@+id/top_rectangle"
+        app:layout_constraintWidth_percent="0.44" />
+
+    <TextView
+        android:id="@+id/tvBookingsLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:text="Total Bookings"
+        android:textColor="#9E9E9E"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/square_booking"
+        app:layout_constraintTop_toTopOf="@+id/square_booking"
+        app:layout_constraintEnd_toEndOf="@+id/square_booking" />
+
+    <TextView
+        android:id="@+id/tvTotalBookings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        android:text="—"
+        android:textColor="#212121"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/square_booking"
+        app:layout_constraintTop_toBottomOf="@+id/tvBookingsLabel"
+        app:layout_constraintEnd_toEndOf="@+id/square_booking" />
+
+    <TextView
+        android:id="@+id/tvBookingsChange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        android:text="+0% vs last month"
+        android:textColor="#4CAF50"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/square_booking"
+        app:layout_constraintTop_toBottomOf="@+id/tvTotalBookings"
+        app:layout_constraintEnd_toEndOf="@+id/square_booking" />
+
+    <View
+        android:id="@+id/square_user"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_rect"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/square_four"
+        app:layout_constraintTop_toBottomOf="@+id/top_rectangle"
+        app:layout_constraintWidth_percent="0.44" />
+
+    <TextView
+        android:id="@+id/tvUsersLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Active Users"
+        android:textColor="#9E9E9E"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/square_user"
+        app:layout_constraintTop_toTopOf="@+id/square_user"
+        app:layout_constraintEnd_toEndOf="@+id/square_user" />
+
+    <TextView
+        android:id="@+id/tvActiveUsers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="—"
+        android:textColor="#212121"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/square_user"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsersLabel"
+        app:layout_constraintEnd_toEndOf="@+id/square_user" />
+
+    <TextView
+        android:id="@+id/tvUsersChange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="+0% vs last month"
+        android:textColor="#4CAF50"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/square_user"
+        app:layout_constraintTop_toBottomOf="@+id/tvActiveUsers"
+        app:layout_constraintEnd_toEndOf="@+id/square_user" />
+
+    <View
+        android:id="@+id/square_revenue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_rect"
+        app:layout_constraintBottom_toBottomOf="@+id/square_four"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="@+id/square_four"
+        app:layout_constraintWidth_percent="0.44" />
+
+    <TextView
+        android:id="@+id/tvRevenueLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="28dp"
+        android:text="Revenue"
+        android:textColor="#9E9E9E"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/square_revenue"
+        app:layout_constraintTop_toTopOf="@+id/square_revenue"
+        app:layout_constraintEnd_toEndOf="@+id/square_revenue" />
+
+    <TextView
+        android:id="@+id/tvRevenue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        android:text="—"
+        android:textColor="#212121"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/square_revenue"
+        app:layout_constraintTop_toBottomOf="@+id/tvRevenueLabel"
+        app:layout_constraintEnd_toEndOf="@+id/square_revenue" />
+
+    <TextView
+        android:id="@+id/tvRevenueChange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="4dp"
+        android:text="+0% vs last month"
+        android:textColor="#4CAF50"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/square_revenue"
+        app:layout_constraintTop_toBottomOf="@+id/tvRevenue"
+        app:layout_constraintEnd_toEndOf="@+id/square_revenue" />
+
+    <View
+        android:id="@+id/square_growth"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_rect"
+        app:layout_constraintBottom_toBottomOf="@+id/square_four"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/square_four"
+        app:layout_constraintWidth_percent="0.44" />
+
+    <TextView
+        android:id="@+id/tvGrowthLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:text="Growth Rate"
+        android:textColor="#9E9E9E"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@+id/square_growth"
+        app:layout_constraintTop_toTopOf="@+id/square_growth"
+        app:layout_constraintEnd_toEndOf="@+id/square_growth" />
+
+    <TextView
+        android:id="@+id/tvGrowthRate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="—"
+        android:textColor="#212121"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/square_growth"
+        app:layout_constraintTop_toBottomOf="@+id/tvGrowthLabel"
+        app:layout_constraintEnd_toEndOf="@+id/square_growth" />
+
+    <TextView
+        android:id="@+id/tvGrowthChange"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="+0% vs last month"
+        android:textColor="#4CAF50"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/square_growth"
+        app:layout_constraintTop_toBottomOf="@+id/tvGrowthRate"
+        app:layout_constraintEnd_toEndOf="@+id/square_growth" />
+
+    <LinearLayout
+        android:id="@+id/llBottomSection"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/square_four">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/rounded_rect"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/recent_activity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Recent Activity"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/black" />
+
+            <LinearLayout
+                android:id="@+id/llRecentActivity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <TextView
+                android:id="@+id/tvNoActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No recent activity"
+                android:textColor="#BDBDBD"
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        app:elevation="16dp"
+        app:menu="@menu/admin_bottome_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
