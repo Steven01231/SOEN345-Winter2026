@@ -96,4 +96,19 @@ class LogInActivityEspressoTest {
     fun loginScreen_passwordFieldIsEnabled() {
         onView(withId(R.id.etPassword)).check(matches(isEnabled()))
     }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkIsDisplayed() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkHasCorrectText() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(withText("Forgot password?")))
+    }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkIsClickable() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(isClickable()))
+    }
 }

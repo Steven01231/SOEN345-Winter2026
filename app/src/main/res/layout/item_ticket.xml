@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/cr8bffffff"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginBottom="12dp"
+    android:elevation="2dp"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Title row with status badge -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvTicketTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="Event Title" />
+
+        <TextView
+            android:id="@+id/tvTicketStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="4dp"
+            android:text="Active"
+            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/cr19370800b00c950" />
+    </LinearLayout>
+
+    <!-- Date -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="4dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="6dp"
+            android:src="@android:drawable/ic_menu_today"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tvTicketDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:text="Date" />
+    </LinearLayout>
+
+    <!-- Location -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginEnd="6dp"
+            android:src="@android:drawable/ic_menu_mapmode"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/tvTicketLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#757575"
+            android:textSize="13sp"
+            android:text="Location" />
+    </LinearLayout>
+
+    <!-- Cancel button (hidden for cancelled reservations) -->
+    <Button
+        android:id="@+id/btnCancelTicket"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="Cancel Reservation"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#E53935" />
+
+</LinearLayout>

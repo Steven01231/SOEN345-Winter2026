@@ -27,11 +27,14 @@ class MainActivity : ComponentActivity() {
 
 
 
-        val intent = Intent(this, LogInActivity::class.java)
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val intent = if (currentUser != null) {
+            Intent(this, com.example.soen345_winter2026.events.EventListActivity::class.java)
+        } else {
+            Intent(this, LogInActivity::class.java)
+        }
         startActivity(intent)
-
-        // Test Firebase connection
-        testFirebaseConnection()
+        finish()
     }
 
     private fun testFirebaseConnection() {
