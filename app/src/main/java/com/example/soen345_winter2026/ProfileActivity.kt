@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.soen345_winter2026.databinding.ActivityProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -51,7 +52,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         db.collection("users").document(user.uid)
-            .update("fullName", newName)
+            .set(mapOf("fullName" to newName), SetOptions.merge())
             .addOnSuccessListener {
                 binding.tvAvatarInitial.text = newName[0].uppercase()
                 Toast.makeText(this, "Profile updated.", Toast.LENGTH_SHORT).show()
