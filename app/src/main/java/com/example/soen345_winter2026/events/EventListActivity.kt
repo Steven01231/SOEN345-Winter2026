@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -88,6 +89,8 @@ class EventListActivity : AppCompatActivity() {
         binding.navSearch.setOnClickListener {
             setNavActive(binding.navSearch, binding.tvNavSearch)
             binding.etSearch.requestFocus()
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etSearch, InputMethodManager.SHOW_IMPLICIT)
         }
 
         binding.navMyTickets.setOnClickListener {
