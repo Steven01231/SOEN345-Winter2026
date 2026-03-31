@@ -184,4 +184,120 @@ class RegistrationDBTest {
         assertEquals(false, resultSuccess)
         assertEquals(errorMsg, resultMsg)
     }
+
+    @Test
+    fun `adminLogIn - success when admin document exists`() {
+        val email = "admin@test.com"
+        val uid = "admin_123"
+        val mockDocSnapshot = mockk<com.google.firebase.firestore.DocumentSnapshot>(relaxed = true)
+        val mockTaskGet = mockk<Task<com.google.firebase.firestore.DocumentSnapshot>>(relaxed = true)
+
+        // 1. Mock Auth Success
+        every { mockAuth.signInWithEmailAndPassword(any(), any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+        every { mockAuth.currentUser } returns mockUser
+        every { mockUser.uid } returns uid
+
+        // 2. Mock Firestore Success
+        every { mockDb.collection("users").document(uid).get() } returns mockTaskGet
+        every { mockDocSnapshot.exists() } returns true
+        every { mockDocSnapshot.getBoolean("isAdmin") } returns true
+
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        val firestoreSlot = slot<OnSuccessListener<com.google.firebase.firestore.DocumentSnapshot>>()
+
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+        every { mockTaskGet.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskGet
+
+        var successRes = false
+        var adminRes = false
+        registrationDB.adminLogIn(email, "password") { success, isAdmin, _ ->
+            successRes = success
+            adminRes = isAdmin
+        }
+
+        // Trigger chain
+        authSlot.captured.onComplete(mockTaskAuth)
+        firestoreSlot.captured.onSuccess(mockDocSnapshot)
+
+        assertTrue(successRes)
+        assertTrue(adminRes)
+    }
+
+    @Test
+    fun `adminLogIn - failure when auth fails`() {
+        val errorMsg = "Login failed"
+        every { mockAuth.signInWithEmailAndPassword(any(), any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns false
+        every { mockTaskAuth.exception?.message } returns errorMsg
+
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+
+        registrationDB.adminLogIn("a@b.com", "123") { success, isAdmin, msg ->
+            assertFalse(success)
+            assertFalse(isAdmin)
+            assertEquals(errorMsg, msg)
+        }
+
+        authSlot.captured.onComplete(mockTaskAuth)
+    }
+
+    @Test
+    fun `adminLogIn - failure when user document missing`() {
+        val uid = "user_456"
+        val mockDocSnapshot = mockk<com.google.firebase.firestore.DocumentSnapshot>(relaxed = true)
+        val mockTaskGet = mockk<Task<com.google.firebase.firestore.DocumentSnapshot>>(relaxed = true)
+
+        every { mockAuth.signInWithEmailAndPassword(any(), any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+        every { mockAuth.currentUser } returns mockUser
+        every { mockUser.uid } returns uid
+
+        every { mockDb.collection("users").document(uid).get() } returns mockTaskGet
+        every { mockDocSnapshot.exists() } returns false // Document doesn't exist
+
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        val firestoreSlot = slot<OnSuccessListener<com.google.firebase.firestore.DocumentSnapshot>>()
+
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+        every { mockTaskGet.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskGet
+
+        registrationDB.adminLogIn("test@test.com", "pass") { success, _, msg ->
+            assertFalse(success)
+            assertEquals("User data not found", msg)
+        }
+
+        authSlot.captured.onComplete(mockTaskAuth)
+        firestoreSlot.captured.onSuccess(mockDocSnapshot)
+    }
+
+    @Test
+    fun `adminLogIn - failure when firestore fetch fails`() {
+        val uid = "user_789"
+        val errorMsg = "Firestore Error"
+        val mockTaskGet = mockk<Task<com.google.firebase.firestore.DocumentSnapshot>>(relaxed = true)
+
+        every { mockAuth.signInWithEmailAndPassword(any(), any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+        every { mockAuth.currentUser } returns mockUser
+        every { mockUser.uid } returns uid
+
+        every { mockDb.collection("users").document(uid).get() } returns mockTaskGet
+
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        val failureSlot = slot<OnFailureListener>()
+
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+        every { mockTaskGet.addOnSuccessListener(any()) } returns mockTaskGet
+        every { mockTaskGet.addOnFailureListener(capture(failureSlot)) } returns mockTaskGet
+
+        registrationDB.adminLogIn("test@test.com", "pass") { success, _, msg ->
+            assertFalse(success)
+            assertEquals(errorMsg, msg)
+        }
+
+        authSlot.captured.onComplete(mockTaskAuth)
+        failureSlot.captured.onFailure(Exception(errorMsg))
+    }
 }
