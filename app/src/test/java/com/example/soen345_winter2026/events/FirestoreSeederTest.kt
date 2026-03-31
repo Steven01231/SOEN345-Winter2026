@@ -167,7 +167,7 @@ class FirestoreSeederTest {
             assertTrue(event.containsKey("location"), "Event missing location")
             assertTrue(event.containsKey("availableSeats"), "Event missing availableSeats")
             assertTrue(event.containsKey("status"), "Event missing status")
-            assertEquals(EventStatus.ACTIVE, event["status"])
+            assertEquals("active", event["status"])
         }
     }
 }

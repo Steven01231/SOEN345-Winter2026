@@ -8,7 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.soen345_winter2026.R
 import com.example.soen345_winter2026.databinding.ItemEventBinding
 
-class EventAdapter(private var events: List<Event>) :
+class EventAdapter(private var events: List<Event>,  private val onBookClick: (Event) -> Unit) :
     RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     private val categoryBadgeColors = mapOf(
@@ -26,6 +26,10 @@ class EventAdapter(private var events: List<Event>) :
             binding.tvCategory.text = event.category
             binding.tvDate.text = event.date
             binding.tvLocation.text = event.location
+
+            binding.btnBook.setOnClickListener {
+                onBookClick(event)
+            }
 
             if (event.isSoldOut) {
                 binding.tvSeats.text = "Sold Out"

@@ -31,7 +31,9 @@ class EventListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView() {
-        adapter = EventAdapter(emptyList())
+        adapter = EventAdapter(emptyList()) { event ->
+            bookEvent(event)
+        }
         binding.rvEvents.layoutManager = LinearLayoutManager(this)
         binding.rvEvents.adapter = adapter
     }
@@ -93,5 +95,12 @@ class EventListActivity : AppCompatActivity() {
         val filtered = EventFilter.filter(allEvents, searchQuery, selectedCategory, "", "")
         adapter.updateEvents(filtered)
         binding.tvEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
+    }
+    private fun bookEvent(event: Event) {
+        android.widget.Toast.makeText(
+            this,
+            "Booked: ${event.title}",
+            android.widget.Toast.LENGTH_SHORT
+        ).show()
     }
 }
