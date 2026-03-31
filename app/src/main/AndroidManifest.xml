@@ -29,6 +29,7 @@
         <activity android:name=".MainPageActivity" />
         <activity android:name=".AdminPageActivity" />
         <activity android:name=".AddEventActivity" />
+        <activity android:name=".admin.EditEventActivity" />
     </application>
 
 </manifest>
