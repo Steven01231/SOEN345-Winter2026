@@ -82,14 +82,12 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
                         .into(binding.ivEventImage);
             }
 
-            // ✅ Edit button
             binding.btnEdit.setOnClickListener(v -> {
                 if (onEditClick != null) {
                     onEditClick.onEdit(event);
                 }
             });
 
-            // ❌ Cancel button
             binding.btnCancel.setOnClickListener(v -> {
                 if (onCancelClick != null) {
                     onCancelClick.onCancel(event);

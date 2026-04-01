@@ -16,69 +16,86 @@ class LogInActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        initializeDependencies()
+        setContentView(binding.root)
+
+        setupClickListeners()
+    }
+
+    private fun initializeDependencies() {
         // Initialize ONLY if test didn't inject mock
         if (!::registrationDB.isInitialized) {
             registrationDB = RegistrationDB()
         }
 
         binding = RegistrationBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    }
 
+    private fun setupClickListeners() {
         binding.btnSignUp.setOnClickListener {
-            val intent = Intent(this, SignUpActivity::class.java)
-            startActivity(intent)
+            handleSignUp()
         }
 
         binding.btnLogin.setOnClickListener {
-
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
-            }else {
-                Toast.makeText(this, "Registration Successful!", Toast.LENGTH_SHORT).show()
-
-                registrationDB.logIn(email, password) { success, error ->
-                    if (success) {
-                        Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                        // Navigate to event list after login
-                        val intent = Intent(this, EventListActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
+            handleUserLogin()
         }
 
         binding.adminBtnLogin.setOnClickListener {
-            val email = binding.etEmail.text.toString().trim()
-            val password = binding.etPassword.text.toString()
+            handleAdminLogin()
+        }
+    }
 
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+    private fun handleSignUp() {
+        val intent = Intent(this, SignUpActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun handleUserLogin() {
+        val email = binding.etEmail.text.toString()
+        val password = binding.etPassword.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        registrationDB.logIn(email, password) { success, error ->
+            if (success) {
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                // Navigate to event list after login
+                val intent = Intent(this, EventListActivity::class.java)
+                startActivity(intent)
+                finish()
             } else {
-                registrationDB.adminLogIn(email, password) { success, isAdmin, error ->
-                    if (success) {
-                        if (isAdmin) {
-                            // Navigate to Admin specific activity
-                            Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                            val intent = Intent(this, AdminPageActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        } else {
-                            // Navigate to regular User activity
-                            Toast.makeText(this, "You are not an admin!", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
-                    }
-                }
+                Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
             }
         }
+    }
 
+    private fun handleAdminLogin() {
+        val email = binding.etEmail.text.toString().trim()
+        val password = binding.etPassword.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Fields cannot be empty", Toast.LENGTH_SHORT).show()
+            return
         }
 
+        registrationDB.adminLogIn(email, password) { success, isAdmin, error ->
+            if (success) {
+                if (isAdmin) {
+                    // Navigate to Admin specific activity
+                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, AdminPageActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // Navigate to regular User activity
+                    Toast.makeText(this, "You are not an admin!", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Login failed: $error", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
 }

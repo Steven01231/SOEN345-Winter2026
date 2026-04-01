@@ -10,6 +10,7 @@ import com.example.soen345_winter2026.databinding.ActivityAdminPageBinding
 import com.example.soen345_winter2026.events.AdminEventAdapter
 import com.example.soen345_winter2026.events.Event
 import com.example.soen345_winter2026.events.EventAdapter
+import com.example.soen345_winter2026.events.EventListActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AdminPageActivity : AppCompatActivity() {
@@ -92,8 +93,8 @@ class AdminPageActivity : AppCompatActivity() {
         // Switch to Customer View (Placeholder for testing)
         binding.tvCustomerView?.setOnClickListener {
             Toast.makeText(this, "Switching to User View...", Toast.LENGTH_SHORT).show()
-            // val intent = Intent(this, UserActivity::class.java)
-            // startActivity(intent)
+            val intent = Intent(this, EventListActivity::class.java)
+            startActivity(intent)
         }
 
         // Floating Action Button
