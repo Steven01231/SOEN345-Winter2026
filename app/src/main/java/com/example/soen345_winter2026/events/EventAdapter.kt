@@ -66,4 +66,9 @@ class EventAdapter(private var events: List<Event>,  private val onBookClick: (E
         events = newEvents
         notifyDataSetChanged()
     }
+    // To this:
+    fun updateData(newEvents: List<Event>) {
+        this.events = newEvents
+        notifyDataSetChanged()
+    }
 }

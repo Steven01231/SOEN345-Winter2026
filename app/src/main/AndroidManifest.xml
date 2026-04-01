@@ -27,6 +27,9 @@
         <activity android:name=".SignUpActivity" />
         <activity android:name=".LogInActivity" />
         <activity android:name=".MainPageActivity" />
+        <activity android:name=".AdminPageActivity" />
+        <activity android:name=".AddEventActivity" />
+        <activity android:name=".admin.EditEventActivity" />
     </application>
 
 </manifest>
