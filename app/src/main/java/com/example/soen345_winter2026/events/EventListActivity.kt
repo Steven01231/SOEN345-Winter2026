@@ -8,6 +8,8 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.soen345_winter2026.R
 import com.example.soen345_winter2026.databinding.ActivityEventListBinding
+import android.content.Intent
+import com.example.soen345_winter2026.reservation.ReservationActivity
 
 class EventListActivity : AppCompatActivity() {
 
@@ -97,10 +99,13 @@ class EventListActivity : AppCompatActivity() {
         binding.tvEmpty.visibility = if (filtered.isEmpty()) View.VISIBLE else View.GONE
     }
     private fun bookEvent(event: Event) {
-        android.widget.Toast.makeText(
-            this,
-            "Booked: ${event.title}",
-            android.widget.Toast.LENGTH_SHORT
-        ).show()
+        val intent = Intent(this, ReservationActivity::class.java)
+        intent.putExtra("event_title", event.title)
+        intent.putExtra("event_category", event.category)
+        intent.putExtra("event_date", event.date)
+        intent.putExtra("event_location", event.location)
+        intent.putExtra("event_seats", event.availableSeats)
+        intent.putExtra("event_image_url", event.imageUrl)
+        startActivity(intent)
     }
 }
