@@ -11,7 +11,6 @@ import com.bumptech.glide.Glide;
 import com.example.soen345_winter2026.R;
 import com.example.soen345_winter2026.databinding.AdminItemEventBinding;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,12 +29,12 @@ public class AdminEventAdapter extends RecyclerView.Adapter<AdminEventAdapter.Ev
         void onCancel(Event event);
     }
 
-    private final Map<String, Integer> categoryBadgeColors = new HashMap<String, Integer>() {{
-        put("Concert", R.drawable.cr19370800bf6339a);
-        put("Movie", R.drawable.cr19370800b2196f3);
-        put("Sports", R.drawable.cr19370800b00c950);
-        put("Travel", R.drawable.cr19370800bf6339a);
-    }};
+    private static final Map<String, Integer> categoryBadgeColors = Map.of(
+        "Concert", R.drawable.cr19370800bf6339a,
+        "Movie", R.drawable.cr19370800b2196f3,
+        "Sports", R.drawable.cr19370800b00c950,
+        "Travel", R.drawable.cr19370800bf6339a
+    );
 
     public AdminEventAdapter(List<Event> events,
                              OnEditClickListener onEditClick,
