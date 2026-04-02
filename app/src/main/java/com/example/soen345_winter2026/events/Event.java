@@ -19,13 +19,13 @@ public class Event {
     private LocalDateTime endTime = null;
     private String imageUrl = "";
     private String creatorEmail = "";
-
+    private double price = 0.0;
     // Required by Firestore
     public Event() {}
 
     public Event(String eventID, String title, String category, String date,
                  String location, int availableSeats, String description, EventStatus status,
-                 LocalDateTime startTime, LocalDateTime endTime, String imageUrl) {
+                 LocalDateTime startTime, LocalDateTime endTime, String imageUrl,  double price) {
         this.eventID = eventID;
         this.title = title;
         this.category = category;
@@ -37,6 +37,7 @@ public class Event {
         this.startTime = startTime;
         this.endTime = endTime;
         this.imageUrl = imageUrl;
+        this.price = price;
     }
 
     // Getters
@@ -69,4 +70,12 @@ public class Event {
     public String getCreatorEmail() { return creatorEmail; }
 
     public void setCreatorEmail(String creatorEmail) { this.creatorEmail = creatorEmail; }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

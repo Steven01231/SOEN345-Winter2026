@@ -46,6 +46,9 @@ public class EventRepository {
                             Long seats = doc.getLong("availableSeats");
                             event.setAvailableSeats(seats != null ? seats.intValue() : 0);
 
+                            double price = doc.getDouble("price") != null ? doc.getDouble("price") : 0.0;
+                            event.setPrice(price);
+
                             String statusString = doc.getString("status");
                             event.setStatus(parseStatus(statusString));
 

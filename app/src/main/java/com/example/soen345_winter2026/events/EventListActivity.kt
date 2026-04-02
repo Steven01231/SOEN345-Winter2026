@@ -106,6 +106,7 @@ class EventListActivity : AppCompatActivity() {
         intent.putExtra("event_location", event.location)
         intent.putExtra("event_seats", event.availableSeats)
         intent.putExtra("event_image_url", event.imageUrl)
+        intent.putExtra("event_price", event.price)
         startActivity(intent)
     }
 }

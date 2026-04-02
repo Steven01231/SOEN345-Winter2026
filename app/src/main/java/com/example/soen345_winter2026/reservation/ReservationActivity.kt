@@ -1,5 +1,6 @@
 package com.example.soen345_winter2026.reservation
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -8,11 +9,18 @@ import com.example.soen345_winter2026.databinding.ReservationBinding
 import java.text.NumberFormat
 import java.util.Locale
 
+import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.UUID
+
 class ReservationActivity : AppCompatActivity() {
     private lateinit var binding: ReservationBinding
     private var ticketCount = 1
     private var availableSeats = 0
     private var pricePerTicket = 0.0
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,12 +66,46 @@ class ReservationActivity : AppCompatActivity() {
                 updateTicketUI()
             }
         }
+
         binding.btnConfirmReservation.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Reserved $ticketCount ticket(s)",
-                Toast.LENGTH_SHORT
-            ).show()
+            val reservationId = UUID.randomUUID().toString()
+            val total = ticketCount * pricePerTicket
+            val currentDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                .format(Date())
+
+            val reservation = Reservation(
+                reservationID = reservationId,
+                reservationDate = currentDate,
+                totalAmount = total,
+                status = "ACTIVE",
+                eventTitle = title,
+                eventCategory = category,
+                eventDate = date,
+                eventLocation = location,
+                ticketCount = ticketCount
+            )
+
+            db.collection("reservations")
+                .document(reservationId)
+                .set(reservation)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        this,
+                        "Reserved $ticketCount ticket(s)",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    val intent = Intent(this, MyReservationActivity::class.java)
+                    intent.putExtra("reservation_id", reservationId)
+                    startActivity(intent)
+                }
+                .addOnFailureListener {
+                    Toast.makeText(
+                        this,
+                        "Failed to save reservation",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
         }
     }
     private fun updateTicketUI() {
