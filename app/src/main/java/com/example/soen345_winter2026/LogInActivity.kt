@@ -51,7 +51,7 @@ class LogInActivity : ComponentActivity() {
     }
 
     private fun handleUserLogin() {
-        val email = binding.etEmail.text.toString()
+        val email = binding.etEmailPhone.text.toString()
         val password = binding.etPassword.text.toString()
 
         if (email.isEmpty() || password.isEmpty()) {
@@ -73,7 +73,7 @@ class LogInActivity : ComponentActivity() {
     }
 
     private fun handleAdminLogin() {
-        val email = binding.etEmail.text.toString().trim()
+        val email = binding.etEmailPhone.text.toString().trim()
         val password = binding.etPassword.text.toString()
 
         if (email.isEmpty() || password.isEmpty()) {
