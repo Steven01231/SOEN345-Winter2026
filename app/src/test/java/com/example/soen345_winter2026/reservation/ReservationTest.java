@@ -10,6 +10,7 @@ public class ReservationTest {
     void reservation_shouldStorePassedValues() {
         Reservation reservation = new Reservation(
                 "res123",
+                "user456",
                 "2026-04-10 18:30:00",
                 90.0,
                 "ACTIVE",
@@ -21,6 +22,7 @@ public class ReservationTest {
         );
 
         assertEquals("res123", reservation.getReservationID());
+        assertEquals("user456", reservation.getUserId());
         assertEquals("2026-04-10 18:30:00", reservation.getReservationDate());
         assertEquals(90.0, reservation.getTotalAmount(), 0.001);
         assertEquals("ACTIVE", reservation.getStatus());
@@ -36,6 +38,7 @@ public class ReservationTest {
         Reservation reservation = new Reservation();
 
         assertEquals("", reservation.getReservationID());
+        assertEquals("", reservation.getUserId());
         assertEquals("", reservation.getReservationDate());
         assertEquals(0.0, reservation.getTotalAmount(), 0.001);
         assertEquals("", reservation.getStatus());
@@ -50,6 +53,7 @@ public class ReservationTest {
     void reservation_copy_shouldCreateModifiedObject() {
         Reservation original = new Reservation(
                 "res123",
+                "user456",
                 "2026-04-10 18:30:00",
                 90.0,
                 "ACTIVE",
@@ -62,6 +66,7 @@ public class ReservationTest {
 
         Reservation updated = original.copy(
                 "res123",
+                "user456",
                 "2026-04-10 18:30:00",
                 90.0,
                 "CANCELLED",
@@ -80,6 +85,7 @@ public class ReservationTest {
     void reservation_objectsWithSameValues_shouldBeEqual() {
         Reservation r1 = new Reservation(
                 "res123",
+                "user456",
                 "2026-04-10 18:30:00",
                 90.0,
                 "ACTIVE",
@@ -92,6 +98,7 @@ public class ReservationTest {
 
         Reservation r2 = new Reservation(
                 "res123",
+                "user456",
                 "2026-04-10 18:30:00",
                 90.0,
                 "ACTIVE",
