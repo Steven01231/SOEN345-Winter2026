@@ -14,30 +14,11 @@ class RegistrationDB(
         return "$phone@phone.com"
     }
 
-    // finds either the actual email linked to the acc
-    // or the phone-turned-email fake email linked
-    private fun lookupEmailByPhone(phone: String, callback: (String?, String?) -> Unit) {
-        db.collection("users")
-            .whereEqualTo("phone", phone)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val email = documents.documents[0].getString("email")
-                    callback(email, null)
-                } else {
-                    callback(null, "No account found for this phone number")
-                }
-            }
-            .addOnFailureListener { e ->
-                callback(null, e.message)
-            }
-    }
-
-    private fun resolveAuthEmail(input: String, callback: (String?, String?) -> Unit) {
-        when {
-            Validator.isValidEmail(input) -> callback(input, null)
-            Validator.isValidPhoneNumber(input) -> lookupEmailByPhone(input, callback)
-            else -> callback(null, "Invalid email or phone number")
+    private fun resolveAuthEmail(input: String): Pair<String?, String?> {
+        return when {
+            Validator.isValidEmail(input) -> Pair(input, null)
+            Validator.isValidPhoneNumber(input) -> Pair(phoneToEmail(input), null)
+            else -> Pair(null, "Invalid email or phone number")
         }
     }
 
@@ -96,22 +77,20 @@ class RegistrationDB(
         callback: (Boolean, String?) -> Unit
     ) {
 
-        resolveAuthEmail(input) { email, error ->
-            if (email == null) {
-                callback(false, error)
-                return@resolveAuthEmail
-            }
-
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        callback(true, null)
-                    } else {
-                        callback(false, task.exception?.message)
-                    }
-                }
+        val (email, error) = resolveAuthEmail(input)
+        if (email == null) {
+            callback(false, error)
+            return
         }
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }
     }
 
     fun adminLogIn(
@@ -119,36 +98,33 @@ class RegistrationDB(
         password: String,
         callback: (Boolean, Boolean, String?) -> Unit) {
 
-        resolveAuthEmail(input) { email, error ->
-            if (email == null) {
-                callback(false, false, error)
-                return@resolveAuthEmail
-            }
-
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val userId = auth.currentUser?.uid
-                        if (userId != null) {
-                            // Fetch the user document from Firestore
-                            db.collection("users").document(userId).get()
-                                .addOnSuccessListener { document ->
-                                    if (document != null && document.exists()) {
-                                        val isAdmin = document.getBoolean("isAdmin") ?: false
-                                        // Return success, the admin status, and no error
-                                        callback(true, isAdmin, null)
-                                    } else {
-                                        callback(false, false, "User data not found")
-                                    }
-                                }
-                                .addOnFailureListener { e ->
-                                    callback(false, false, e.message)
-                                }
-                        }
-                    } else {
-                        callback(false, false, task.exception?.message ?: "Login failed")
-                    }
-                }
+        val (email, error) = resolveAuthEmail(input)
+        if (email == null) {
+            callback(false, false, error)
+            return
         }
+
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = auth.currentUser?.uid
+                    if (userId != null) {
+                        db.collection("users").document(userId).get()
+                            .addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    val isAdmin = document.getBoolean("isAdmin") ?: false
+                                    callback(true, isAdmin, null)
+                                } else {
+                                    callback(false, false, "User data not found")
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                callback(false, false, e.message)
+                            }
+                    }
+                } else {
+                    callback(false, false, task.exception?.message ?: "Login failed")
+                }
+            }
     }
 }
