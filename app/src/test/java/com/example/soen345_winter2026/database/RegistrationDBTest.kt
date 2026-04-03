@@ -73,7 +73,7 @@ class RegistrationDBTest {
         every { mockTaskVoid.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskVoid
 
         var resultSuccess = false
-        registrationDB.signUp(email, pass, name, false) { success, _ ->
+        registrationDB.signUp(email, "", pass, name, false) { success, _ ->
             resultSuccess = success
         }
 
@@ -94,7 +94,7 @@ class RegistrationDBTest {
         val authSlot = slot<OnCompleteListener<AuthResult>>()
         every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
 
-        registrationDB.signUp("a@b.com", "123", "Name", false) { success, msg ->
+        registrationDB.signUp("a@b.com", "", "123", "Name", false) { success, msg ->
             assertFalse(success)
             assertEquals(errorMsg, msg)
         }
@@ -168,7 +168,7 @@ class RegistrationDBTest {
         var resultSuccess: Boolean? = null
         var resultMsg: String? = null
 
-        registrationDB.signUp(email, pass, name, true) { success, msg ->
+        registrationDB.signUp(email, "", pass, name, true) { success, msg ->
             resultSuccess = success
             resultMsg = msg
         }
