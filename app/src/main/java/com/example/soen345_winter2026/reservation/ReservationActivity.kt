@@ -9,6 +9,7 @@ import com.example.soen345_winter2026.databinding.ReservationBinding
 import java.text.NumberFormat
 import java.util.Locale
 
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -75,6 +76,7 @@ class ReservationActivity : AppCompatActivity() {
 
             val reservation = Reservation(
                 reservationID = reservationId,
+                userId = FirebaseAuth.getInstance().currentUser?.uid ?: "",
                 reservationDate = currentDate,
                 totalAmount = total,
                 status = "ACTIVE",
