@@ -300,6 +300,7 @@ class EventRepositoryTest {
         when(doc.getLong("availableSeats")).thenReturn(20L);
         when(doc.getString("status")).thenReturn("weird");
 
+
         QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
         when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
 
@@ -315,4 +316,36 @@ class EventRepositoryTest {
         verify(mockTask).addOnSuccessListener(captor.capture());
         captor.getValue().onSuccess(mockSnapshot);
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void fetchActiveEvents_onSuccess_parsesPriceCorrectly() {
+        DocumentSnapshot doc = mock(DocumentSnapshot.class);
+        when(doc.getId()).thenReturn("doc-price");
+        when(doc.getString("title")).thenReturn("Japan Cherry Blossom Trip");
+        when(doc.getString("category")).thenReturn("Travel");
+        when(doc.getString("date")).thenReturn("2026-04-05");
+        when(doc.getString("location")).thenReturn("Tokyo, Japan");
+        when(doc.getString("description")).thenReturn("desc");
+        when(doc.getString("imageUrl")).thenReturn("");
+        when(doc.getLong("availableSeats")).thenReturn(25L);
+        when(doc.getString("status")).thenReturn("active");
+        when(doc.getDouble("price")).thenReturn(1200.0);
+
+        QuerySnapshot mockSnapshot = mock(QuerySnapshot.class);
+        when(mockSnapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+        ArgumentCaptor<OnSuccessListener<QuerySnapshot>> captor =
+                ArgumentCaptor.forClass(OnSuccessListener.class);
+
+        repository.fetchActiveEvents((events, error) -> {
+            assertNull(error);
+            assertEquals(1, events.size());
+            assertEquals(1200.0, events.get(0).getPrice(), 0.001);
+        });
+
+        verify(mockTask).addOnSuccessListener(captor.capture());
+        captor.getValue().onSuccess(mockSnapshot);
+    }
+
 }

@@ -15,11 +15,11 @@ class EventFilterTest {
     @BeforeEach
     void setUp() {
         events = Arrays.asList(
-                new Event("1", "Summer Music Festival", "Concert", "June 15, 2026", "Central Park", 150, "description", EventStatus.ACTIVE, null, null, ""),
-                new Event("2", "Avengers: Endgame", "Movie", "July 1, 2026", "Cinema City", 80, "description", EventStatus.ACTIVE, null, null, ""),
-                new Event("3", "NBA Finals", "Sports", "June 20, 2026", "Madison Square Garden", 0, "description", EventStatus.ACTIVE, null, null, ""),
-                new Event("4", "Paris Travel Tour", "Travel", "August 10, 2026", "Paris", 30, "description", EventStatus.ACTIVE, null, null, ""),
-                new Event("5", "Rock Concert Night", "Concert", "September 5, 2026", "Hollywood Bowl", 200, "description", EventStatus.ACTIVE, null, null, "")
+                new Event("1", "Summer Music Festival", "Concert", "June 15, 2026", "Central Park", 150, "description", EventStatus.ACTIVE, null, null, "",45.0),
+                new Event("2", "Avengers: Endgame", "Movie", "July 1, 2026", "Cinema City", 80, "description", EventStatus.ACTIVE, null, null, "",20.0),
+                new Event("3", "NBA Finals", "Sports", "June 20, 2026", "Madison Square Garden", 0, "description", EventStatus.ACTIVE, null, null, "", 120.0),
+                new Event("4", "Paris Travel Tour", "Travel", "August 10, 2026", "Paris", 30, "description", EventStatus.ACTIVE, null, null, "",1200.0),
+                new Event("5", "Rock Concert Night", "Concert", "September 5, 2026", "Hollywood Bowl", 200, "description", EventStatus.ACTIVE, null, null, "",75.0)
         );
     }
 
@@ -175,13 +175,13 @@ class EventFilterTest {
 
     @Test
     void isSoldOut_whenZeroSeats_returnsTrue() {
-        Event soldOut = new Event("x", "Test", "Sports", "Jan 1", "Venue", 0, "description", EventStatus.ACTIVE, null, null, "");
+        Event soldOut = new Event("x", "Test", "Sports", "Jan 1", "Venue", 0, "description", EventStatus.ACTIVE, null, null, "",45.0);
         assertTrue(soldOut.isSoldOut());
     }
 
     @Test
     void isSoldOut_whenSeatsAvailable_returnsFalse() {
-        Event available = new Event("x", "Test", "Sports", "Jan 1", "Venue", 50, "description", EventStatus.ACTIVE, null, null, "");
+        Event available = new Event("x", "Test", "Sports", "Jan 1", "Venue", 50, "description", EventStatus.ACTIVE, null, null, "",75.0);
         assertFalse(available.isSoldOut());
     }
 
