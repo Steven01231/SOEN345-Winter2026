@@ -39,4 +39,35 @@ public class ReservationCalculatorTest {
         assertFalse(calc.decrease());
         assertEquals(1, calc.getTicketCount());
     }
+
+    @Test
+    void totalPriceUpdatesAfterIncreaseAndDecrease() {
+        ReservationCalculator calc = new ReservationCalculator(5, 25.0);
+
+        calc.increase();
+        calc.increase();
+        assertEquals(3, calc.getTicketCount());
+        assertEquals(75.0, calc.getTotalPrice(), 0.001);
+
+        calc.decrease();
+        assertEquals(2, calc.getTicketCount());
+        assertEquals(50.0, calc.getTotalPrice(), 0.001);
+    }
+
+    @Test
+    void onlyOneSeatAvailable_increaseNotPossible() {
+        ReservationCalculator calc = new ReservationCalculator(1, 30.0);
+
+        assertEquals(1, calc.getTicketCount());
+        assertTrue(calc.canConfirm());
+        assertFalse(calc.increase());
+        assertEquals(1, calc.getTicketCount());
+    }
+
+    @Test
+    void totalPriceIsZeroWhenNoSeats() {
+        ReservationCalculator calc = new ReservationCalculator(0, 50.0);
+
+        assertEquals(0.0, calc.getTotalPrice(), 0.001);
+    }
 }
