@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.soen345_winter2026.databinding.ActivityMyReservationBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.NumberFormat
+import java.util.Locale
 
 class MyReservationActivity : AppCompatActivity() {
 
@@ -51,7 +53,7 @@ class MyReservationActivity : AppCompatActivity() {
                         binding.tvEventDate.text = reservation.eventDate
                         binding.tvEventLocation.text = reservation.eventLocation
                         binding.tvTicketCount.text = reservation.ticketCount.toString()
-                        binding.tvTotalAmount.text = "$${reservation.totalAmount}"
+                        binding.tvTotalAmount.text = NumberFormat.getCurrencyInstance(Locale.US).format(reservation.totalAmount)
 
                         binding.btnCancelReservation.isEnabled =
                             reservation.status == "ACTIVE"

@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import java.text.NumberFormat
+import java.util.Locale
 import com.bumptech.glide.Glide
 import com.example.soen345_winter2026.R
 import com.example.soen345_winter2026.databinding.ItemEventBinding
@@ -26,7 +28,7 @@ class EventAdapter(private var events: List<Event>,  private val onBookClick: (E
             binding.tvCategory.text = event.category
             binding.tvDate.text = event.date
             binding.tvLocation.text = event.location
-            binding.tvPrice.text = "$${event.price.toInt()}"
+            binding.tvPrice.text = NumberFormat.getCurrencyInstance(Locale.US).format(event.price)
 
 
             binding.btnBook.setOnClickListener {
