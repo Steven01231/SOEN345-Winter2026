@@ -100,6 +100,7 @@ class EventListActivity : AppCompatActivity() {
     }
     private fun bookEvent(event: Event) {
         val intent = Intent(this, ReservationActivity::class.java)
+        intent.putExtra("event_id", event.eventID)
         intent.putExtra("event_title", event.title)
         intent.putExtra("event_category", event.category)
         intent.putExtra("event_date", event.date)
