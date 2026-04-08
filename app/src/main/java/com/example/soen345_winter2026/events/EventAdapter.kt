@@ -26,6 +26,8 @@ class EventAdapter(private var events: List<Event>,  private val onBookClick: (E
             binding.tvCategory.text = event.category
             binding.tvDate.text = event.date
             binding.tvLocation.text = event.location
+            binding.tvPrice.text = "$${event.price.toInt()}"
+
 
             binding.btnBook.setOnClickListener {
                 onBookClick(event)

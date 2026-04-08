@@ -25,7 +25,7 @@ class EventTest {
     @Test
     void fullConstructor_setsAllFields() {
         Event event = new Event("id1", "Jazz Night", "Concert", "2026-04-10",
-                "Montreal", 200, "description", EventStatus.ACTIVE, null, null, "http://img.png");
+                "Montreal", 200, "description", EventStatus.ACTIVE, null, null, "http://img.png",45.0);
         assertEquals("id1", event.getEventID());
         assertEquals("Jazz Night", event.getTitle());
         assertEquals("Concert", event.getCategory());
@@ -35,6 +35,7 @@ class EventTest {
         assertEquals("description", event.getDescription());
         assertEquals(EventStatus.ACTIVE, event.getStatus());
         assertEquals("http://img.png", event.getImageUrl());
+        assertEquals(45.0, event.getPrice());
     }
 
     // --- Setters ---

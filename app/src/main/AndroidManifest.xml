@@ -30,6 +30,8 @@
         <activity android:name=".AdminPageActivity" />
         <activity android:name=".AddEventActivity" />
         <activity android:name=".admin.EditEventActivity" />
+        <activity android:name=".reservation.ReservationActivity" />
+        <activity android:name=".reservation.MyReservationActivity" />
     </application>
 
 </manifest>

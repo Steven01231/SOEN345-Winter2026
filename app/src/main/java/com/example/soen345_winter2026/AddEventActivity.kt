@@ -37,7 +37,7 @@ class AddEventActivity : BaseEventActivity() {
         val newEvent = Event(
             uniqueId, values.title, values.category, values.date, values.location,
             values.capacity, "Event Description", EventStatus.ACTIVE,
-            null, null, imageUrl
+            null, null, imageUrl,0.0
         ).apply {
             this.creatorEmail = adminEmail
         }

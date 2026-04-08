@@ -132,6 +132,21 @@
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Available: 0 seats" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/tvPrice"
+                android:textColor="#212121"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0" />
+
         </LinearLayout>
         <Button
             android:id="@+id/btnBook"
