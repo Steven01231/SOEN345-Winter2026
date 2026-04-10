@@ -9,6 +9,12 @@ import com.example.soen345_winter2026.databinding.ReservationBinding
 import java.text.NumberFormat
 import java.util.Locale
 
+import com.example.soen345_winter2026.confirmation.ConfirmationManager
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
@@ -22,6 +28,18 @@ class ReservationActivity : AppCompatActivity() {
     private var pricePerTicket = 0.0
 
     private val db = FirebaseFirestore.getInstance()
+
+    private val smsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (!isGranted) {
+            Toast.makeText(this, "SMS permission denied, confirmation will be email only", Toast.LENGTH_SHORT).show()
+        }
+        pendingReservation?.let { confirmReservation(it) }
+        pendingReservation = null
+    }
+
+    private var pendingReservation: Reservation? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,15 +109,7 @@ class ReservationActivity : AppCompatActivity() {
                 .document(reservationId)
                 .set(reservation)
                 .addOnSuccessListener {
-                    Toast.makeText(
-                        this,
-                        "Reserved $ticketCount ticket(s)",
-                        Toast.LENGTH_SHORT
-                    ).show()
-
-                    val intent = Intent(this, MyReservationActivity::class.java)
-                    intent.putExtra("reservation_id", reservationId)
-                    startActivity(intent)
+                    checkSmsPermissionAndNotify(reservation)
                 }
                 .addOnFailureListener {
                     Toast.makeText(
@@ -110,6 +120,53 @@ class ReservationActivity : AppCompatActivity() {
                 }
         }
     }
+
+    private fun checkSmsPermissionAndNotify(reservation: Reservation) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        db.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                val phone = document.getString("phone") ?: ""
+                val hasPhone = phone.isNotEmpty()
+
+                if (!hasPhone) {
+                    confirmReservation(reservation)
+                    return@addOnSuccessListener
+                }
+
+                when {
+                    ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS)
+                            == PackageManager.PERMISSION_GRANTED -> {
+                        confirmReservation(reservation)
+                    }
+                    else -> {
+                        pendingReservation = reservation
+                        smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
+                    }
+                }
+            }
+            .addOnFailureListener {
+                confirmReservation(reservation)
+            }
+    }
+
+    private fun confirmReservation(reservation: Reservation) {
+        ConfirmationManager.notify(this, reservation) { success, error ->
+            runOnUiThread {
+                val message = if (success) {
+                    "Reserved ${reservation.ticketCount} ticket(s) — confirmation sent"
+                } else {
+                    "Reserved but confirmation failed: $error"
+                }
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val intent = Intent(this, MyReservationActivity::class.java)
+        intent.putExtra("reservation_id", reservation.reservationID)
+        startActivity(intent)
+    }
+
     private fun updateTicketUI() {
         binding.tvTicketCount.text = ticketCount.toString()
         val total = ticketCount * pricePerTicket
