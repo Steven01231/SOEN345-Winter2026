@@ -66,5 +66,16 @@ class EmailServiceTest {
             assertThat(result).isFalse()
             assertThat(error).isEqualTo("SMTP error")
         }
+
+        @Test
+        fun `send passes the correct message to the service`() {
+            val fakeService = FakeEmailService()
+            val message = createMessage(email = "test@test.com")
+
+            fakeService.send(message) { _, _ -> }
+
+            assertThat(fakeService.lastMessage).isEqualTo(message)
+            assertThat(fakeService.lastMessage?.recipientEmail).isEqualTo("test@test.com")
+        }
     }
 }
