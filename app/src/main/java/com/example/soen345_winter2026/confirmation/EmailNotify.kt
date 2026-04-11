@@ -1,5 +1,6 @@
 package com.example.soen345_winter2026.confirmation
 
+import java.security.Security
 import java.util.Properties
 import javax.mail.Authenticator
 import javax.mail.Message
@@ -32,6 +33,12 @@ object EmailNotify : EmailService {
 
         Thread {
             try {
+                // Remove Conscrypt as the default SSL provider — it conflicts
+                // with JavaMail's TLS handshake on Android
+                try {
+                    Security.removeProvider("GmsCore_OpenSSL")
+                } catch (_: Exception) {}
+
                 val props = Properties().apply {
                     put("mail.smtp.auth", "true")
                     put("mail.smtp.starttls.enable", "true")
