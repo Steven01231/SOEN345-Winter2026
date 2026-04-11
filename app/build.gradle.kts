@@ -1,3 +1,8 @@
+import java.util.Properties
+val localProperties = Properties()
+localProperties.load(rootProject.file("local.properties").inputStream())
+// kind of like .env, look in the highest part of file hierarchy
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -16,6 +21,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "SENDER_EMAIL", "\"${localProperties["SENDER_EMAIL"]}\"")
+        buildConfigField("String", "SENDER_PASSWORD", "\"${localProperties["SENDER_PASSWORD"]}\"")
     }
 
     buildTypes {
@@ -39,6 +46,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 
     testOptions {

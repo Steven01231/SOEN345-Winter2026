@@ -10,12 +10,12 @@ import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
+import com.example.soen345_winter2026.BuildConfig
 
 object EmailNotify {
 // hardcode this or other storing? Repo not private
-    private const val SENDER_EMAIL = "your_gmail@gmail.com"
-    private const val SENDER_PASSWORD = "your_app_password"
-
+    private const val SENDER_EMAIL = BuildConfig.SENDER_EMAIL
+    private const val SENDER_PASSWORD = BuildConfig.SENDER_PASSWORD
     fun send(message: ConfirmationMessage, callback: (Boolean, String?) -> Unit) {
         if (message.recipientEmail.contains("@phone.com")) {
             callback(false, "No real email address on file")
