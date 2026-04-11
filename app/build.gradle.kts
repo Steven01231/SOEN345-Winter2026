@@ -48,6 +48,13 @@ android {
             all { it.useJUnitPlatform() }
         }
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE-notice.md")
+        resources.excludes.add("META-INF/NOTICE.md")
+    }
+
 }
 
 jacoco {
