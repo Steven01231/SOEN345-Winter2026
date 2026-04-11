@@ -6,7 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.soen345_winter2026.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,10 +20,12 @@ class SignUpActivityEspressoTest {
     fun signUpScreen_displaysAllUIElements() {
         onView(withId(R.id.etFullName)).check(matches(isDisplayed()))
         onView(withId(R.id.etEmail)).check(matches(isDisplayed()))
+        onView(withId(R.id.etPhone)).check(matches(isDisplayed()))
         onView(withId(R.id.etPassword)).check(matches(isDisplayed()))
         onView(withId(R.id.etConfirmPassword)).check(matches(isDisplayed()))
-        onView(withId(R.id.btnSignUp)).check(matches(isDisplayed()))
-        onView(withId(R.id.tvLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.swIsAdmin)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.btnSignUp)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.tvLogin)).perform(scrollTo()).check(matches(isDisplayed()))
     }
 
     @Test
@@ -34,7 +35,12 @@ class SignUpActivityEspressoTest {
 
     @Test
     fun signUpScreen_emailFieldHasCorrectHint() {
-        onView(withId(R.id.etEmail)).check(matches(withHint("Email")))
+        onView(withId(R.id.etEmail)).check(matches(withHint("Email (optional with phone)")))
+    }
+
+    @Test
+    fun signUpScreen_phoneFieldHasCorrectHint() {
+        onView(withId(R.id.etPhone)).check(matches(withHint("Phone, numbers only (optional with email)")))
     }
 
     @Test
@@ -53,6 +59,11 @@ class SignUpActivityEspressoTest {
     }
 
     @Test
+    fun signUpScreen_adminSwitchIsUncheckedByDefault() {
+        onView(withId(R.id.swIsAdmin)).check(matches(isNotChecked()))
+    }
+
+    @Test
     fun signUpScreen_loginLinkHasCorrectText() {
         onView(withId(R.id.tvLogin)).check(matches(withText("Already have an account? Login")))
     }
@@ -63,6 +74,8 @@ class SignUpActivityEspressoTest {
             .perform(typeText("John Doe"), closeSoftKeyboard())
         onView(withId(R.id.etEmail))
             .perform(typeText("john@test.com"), closeSoftKeyboard())
+        onView(withId(R.id.etPhone))
+            .perform(typeText("15143334444"), closeSoftKeyboard())
         onView(withId(R.id.etPassword))
             .perform(typeText("pass123"), closeSoftKeyboard())
         onView(withId(R.id.etConfirmPassword))
@@ -70,6 +83,7 @@ class SignUpActivityEspressoTest {
 
         onView(withId(R.id.etFullName)).check(matches(withText("John Doe")))
         onView(withId(R.id.etEmail)).check(matches(withText("john@test.com")))
+        onView(withId(R.id.etPhone)).check(matches(withText("15143334444")))
     }
 
     @Test
@@ -81,6 +95,7 @@ class SignUpActivityEspressoTest {
     fun signUpScreen_allFieldsAreEnabled() {
         onView(withId(R.id.etFullName)).check(matches(isEnabled()))
         onView(withId(R.id.etEmail)).check(matches(isEnabled()))
+        onView(withId(R.id.etPhone)).check(matches(isEnabled()))
         onView(withId(R.id.etPassword)).check(matches(isEnabled()))
         onView(withId(R.id.etConfirmPassword)).check(matches(isEnabled()))
     }

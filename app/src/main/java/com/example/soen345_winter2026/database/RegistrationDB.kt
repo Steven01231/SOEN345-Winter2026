@@ -2,21 +2,46 @@ package com.example.soen345_winter2026.database
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.soen345_winter2026.utils.Validator
 
 class RegistrationDB(
     private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 ) {
 
+    // change phone to fake email to pass firebase auth without needing phone
+    private fun phoneToEmail(phone: String): String {
+        return "$phone@phone.com"
+    }
+
+    private fun resolveAuthEmail(input: String): Pair<String?, String?> {
+        return when {
+            Validator.isValidEmail(input) -> Pair(input, null)
+            Validator.isValidPhoneNumber(input) -> Pair(phoneToEmail(input), null)
+            else -> Pair(null, "Invalid email or phone number")
+        }
+    }
+
     fun signUp(
         email: String,
+        phone: String,
         password: String,
         fullName: String,
         isAdmin: Boolean,
         callback: (Boolean, String?) -> Unit
     ) {
 
-        auth.createUserWithEmailAndPassword(email, password)
+        val hasEmail = Validator.isValidEmail(email)
+        val hasPhone = Validator.isValidPhoneNumber(phone)
+
+        if (!hasEmail && !hasPhone) {
+            callback(false, "Please provide a valid email or phone number")
+            return
+        }
+
+        val authEmail = if (hasEmail) email else phoneToEmail(phone)
+
+        auth.createUserWithEmailAndPassword(authEmail, password)
             .addOnCompleteListener { task ->
 
                 if (task.isSuccessful) {
@@ -25,8 +50,9 @@ class RegistrationDB(
 
                     val user = hashMapOf(
                         "fullName" to fullName,
-                        "email" to email,
-                        "isAdmin" to isAdmin
+                        "email" to authEmail,
+                        "isAdmin" to isAdmin,
+                        "phone" to (if (hasPhone) phone else ""),
                     )
 
                     db.collection("users")
@@ -46,10 +72,16 @@ class RegistrationDB(
     }
 
     fun logIn(
-        email: String,
+        input: String,
         password: String,
         callback: (Boolean, String?) -> Unit
     ) {
+
+        val (email, error) = resolveAuthEmail(input)
+        if (email == null) {
+            callback(false, error)
+            return
+        }
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -61,18 +93,26 @@ class RegistrationDB(
             }
     }
 
-    fun adminLogIn(email: String, password: String, callback: (Boolean, Boolean, String?) -> Unit) {
+    fun adminLogIn(
+        input: String,
+        password: String,
+        callback: (Boolean, Boolean, String?) -> Unit) {
+
+        val (email, error) = resolveAuthEmail(input)
+        if (email == null) {
+            callback(false, false, error)
+            return
+        }
+
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val userId = auth.currentUser?.uid
                     if (userId != null) {
-                        // Fetch the user document from Firestore
                         db.collection("users").document(userId).get()
                             .addOnSuccessListener { document ->
                                 if (document != null && document.exists()) {
                                     val isAdmin = document.getBoolean("isAdmin") ?: false
-                                    // Return success, the admin status, and no error
                                     callback(true, isAdmin, null)
                                 } else {
                                     callback(false, false, "User data not found")

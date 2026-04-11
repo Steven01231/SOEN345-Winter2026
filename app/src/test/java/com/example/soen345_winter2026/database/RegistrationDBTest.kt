@@ -73,7 +73,7 @@ class RegistrationDBTest {
         every { mockTaskVoid.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskVoid
 
         var resultSuccess = false
-        registrationDB.signUp(email, pass, name, false) { success, _ ->
+        registrationDB.signUp(email, "", pass, name, false) { success, _ ->
             resultSuccess = success
         }
 
@@ -94,7 +94,7 @@ class RegistrationDBTest {
         val authSlot = slot<OnCompleteListener<AuthResult>>()
         every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
 
-        registrationDB.signUp("a@b.com", "123", "Name", false) { success, msg ->
+        registrationDB.signUp("a@b.com", "", "123", "Name", false) { success, msg ->
             assertFalse(success)
             assertEquals(errorMsg, msg)
         }
@@ -168,7 +168,7 @@ class RegistrationDBTest {
         var resultSuccess: Boolean? = null
         var resultMsg: String? = null
 
-        registrationDB.signUp(email, pass, name, true) { success, msg ->
+        registrationDB.signUp(email, "", pass, name, true) { success, msg ->
             resultSuccess = success
             resultMsg = msg
         }
@@ -300,4 +300,142 @@ class RegistrationDBTest {
         authSlot.captured.onComplete(mockTaskAuth)
         failureSlot.captured.onFailure(Exception(errorMsg))
     }
+
+    @Test
+    fun `signUp - phone only auth and firestore succeed`() {
+        val phone = "15143334444"
+        val fakeEmail = "15143334444@phone.com"
+        val pass = "password123"
+        val name = "John Doe"
+        val uid = "user_123"
+
+        // 1. Mock Auth Creation
+        every { mockAuth.createUserWithEmailAndPassword(fakeEmail, pass) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+        every { mockAuth.currentUser } returns mockUser
+        every { mockUser.uid } returns uid
+
+        // 2. Mock Firestore Storage
+        val mockDocRef = mockk<DocumentReference>(relaxed = true)
+        val mockColRef = mockk<CollectionReference>(relaxed = true)
+        every { mockDb.collection("users") } returns mockColRef
+        every { mockColRef.document(uid) } returns mockDocRef
+        every { mockDocRef.set(any()) } returns mockTaskVoid
+
+        // Capture the Auth Listener
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+
+        // Capture the Firestore Success Listener
+        val firestoreSlot = slot<OnSuccessListener<Void>>()
+        every { mockTaskVoid.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskVoid
+
+        var resultSuccess = false
+        registrationDB.signUp("", phone, pass, name, false) { success, _ ->
+            resultSuccess = success
+        }
+
+        // Trigger callbacks manually
+        authSlot.captured.onComplete(mockTaskAuth)
+        firestoreSlot.captured.onSuccess(null)
+
+        assertTrue(resultSuccess)
+    }
+
+    @Test
+    fun `signUp - fail when both email and phone missing`() {
+        val errorMsg = "Please provide a valid email or phone number"
+
+        registrationDB.signUp("", "", "12345678", "Name", false) { success, msg ->
+            assertFalse(success)
+            assertEquals(errorMsg, msg)
+        }
+    }
+
+    @Test
+    fun `logIn - fail when cannot resolve input to phone or email`() {
+        val errorMsg = "Invalid email or phone number"
+
+        registrationDB.logIn("whatever", "12345678") { success, msg ->
+            assertFalse(success)
+            assertEquals(errorMsg, msg)
+        }
+    }
+
+    @Test
+    fun `logIn - success with valid phone input`() {
+        val phone = "15143334444"
+        val fakeEmail = "15143334444@phone.com"
+
+        every { mockAuth.signInWithEmailAndPassword(fakeEmail, any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+
+        val slot = slot<OnCompleteListener<AuthResult>>()
+        every { mockTaskAuth.addOnCompleteListener(capture(slot)) } returns mockTaskAuth
+
+        registrationDB.logIn(phone, "password123") { success, _ ->
+            assertTrue(success)
+        }
+
+        slot.captured.onComplete(mockTaskAuth)
+    }
+
+    @Test
+    fun `logIn - success with valid phone input for admin`() {
+        val phone = "15143334444"
+        val fakeEmail = "15143334444@phone.com"
+        val uid = "admin_123"
+        val mockDocSnapshot = mockk<com.google.firebase.firestore.DocumentSnapshot>(relaxed = true)
+        val mockTaskGet = mockk<Task<com.google.firebase.firestore.DocumentSnapshot>>(relaxed = true)
+
+        // 1. Mock Auth Success
+        every { mockAuth.signInWithEmailAndPassword(fakeEmail, any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns true
+        every { mockAuth.currentUser } returns mockUser
+        every { mockUser.uid } returns uid
+
+        // 2. Mock Firestore Success
+        every { mockDb.collection("users").document(uid).get() } returns mockTaskGet
+        every { mockDocSnapshot.exists() } returns true
+        every { mockDocSnapshot.getBoolean("isAdmin") } returns true
+
+        val authSlot = slot<OnCompleteListener<AuthResult>>()
+        val firestoreSlot = slot<OnSuccessListener<com.google.firebase.firestore.DocumentSnapshot>>()
+
+        every { mockTaskAuth.addOnCompleteListener(capture(authSlot)) } returns mockTaskAuth
+        every { mockTaskGet.addOnSuccessListener(capture(firestoreSlot)) } returns mockTaskGet
+
+        var successRes = false
+        var adminRes = false
+        registrationDB.adminLogIn(phone, "password") { success, isAdmin, _ ->
+            successRes = success
+            adminRes = isAdmin
+        }
+
+        // Trigger chain
+        authSlot.captured.onComplete(mockTaskAuth)
+        firestoreSlot.captured.onSuccess(mockDocSnapshot)
+
+        assertTrue(successRes)
+        assertTrue(adminRes)
+    }
+    
+    @Test
+    fun `logIn - phone login fails when account has email`() {
+        val phone = "15143334444"
+        val fakeEmail = "15143334444@phone.com"
+
+        every { mockAuth.signInWithEmailAndPassword(fakeEmail, any()) } returns mockTaskAuth
+        every { mockTaskAuth.isSuccessful } returns false
+
+        val slot = slot<OnCompleteListener<AuthResult>>()
+        every { mockTaskAuth.addOnCompleteListener(capture(slot)) } returns mockTaskAuth
+
+        registrationDB.logIn(phone, "password123") { success, _ ->
+            assertFalse(success)
+        }
+
+        slot.captured.onComplete(mockTaskAuth)
+    }
+
 }

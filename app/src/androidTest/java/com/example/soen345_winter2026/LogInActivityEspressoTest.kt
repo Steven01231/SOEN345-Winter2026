@@ -6,7 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.soen345_winter2026.R
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -19,15 +18,16 @@ class LogInActivityEspressoTest {
 
     @Test
     fun loginScreen_displaysAllUIElements() {
-        onView(withId(R.id.etEmail)).check(matches(isDisplayed()))
+        onView(withId(R.id.etEmailPhone)).check(matches(isDisplayed()))
         onView(withId(R.id.etPassword)).check(matches(isDisplayed()))
         onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
+        onView(withId(R.id.adminBtnLogin)).check(matches(isDisplayed()))
         onView(withId(R.id.btnSignUp)).check(matches(isDisplayed()))
     }
 
     @Test
     fun loginScreen_emailFieldHasCorrectHint() {
-        onView(withId(R.id.etEmail)).check(matches(withHint("Email")))
+        onView(withId(R.id.etEmailPhone)).check(matches(withHint("Email or phone (if phone, numbers only)")))
     }
 
     @Test
@@ -41,15 +41,27 @@ class LogInActivityEspressoTest {
     }
 
     @Test
+    fun loginScreen_adminLoginButtonHasCorrectText() {
+        onView(withId(R.id.adminBtnLogin)).check(matches(withText("Admin Login")))
+    }
+
+    @Test
     fun loginScreen_signUpLinkHasCorrectText() {
         onView(withId(R.id.btnSignUp)).check(matches(withText("Don't have an account? Sign Up")))
     }
 
     @Test
     fun loginScreen_canTypeInEmailField() {
-        onView(withId(R.id.etEmail))
+        onView(withId(R.id.etEmailPhone))
             .perform(typeText("test@test.com"), closeSoftKeyboard())
-        onView(withId(R.id.etEmail)).check(matches(withText("test@test.com")))
+        onView(withId(R.id.etEmailPhone)).check(matches(withText("test@test.com")))
+    }
+
+    @Test
+    fun loginScreen_canTypePhoneInEmailField() {
+        onView(withId(R.id.etEmailPhone))
+            .perform(typeText("15143334444"), closeSoftKeyboard())
+        onView(withId(R.id.etEmailPhone)).check(matches(withText("15143334444")))
     }
 
     @Test
@@ -71,8 +83,13 @@ class LogInActivityEspressoTest {
     }
 
     @Test
+    fun loginScreen_adminLoginButtonIsClickable() {
+        onView(withId(R.id.adminBtnLogin)).check(matches(isClickable()))
+    }
+
+    @Test
     fun loginScreen_emailFieldIsEnabled() {
-        onView(withId(R.id.etEmail)).check(matches(isEnabled()))
+        onView(withId(R.id.etEmailPhone)).check(matches(isEnabled()))
     }
 
     @Test
