@@ -78,4 +78,29 @@ class EmailServiceTest {
             assertThat(fakeService.lastMessage?.recipientEmail).isEqualTo("test@test.com")
         }
     }
+
+    @Nested
+    @DisplayName("ConfirmationMessage factory")
+    inner class ConfirmationMessageTests {
+
+        @Test
+        fun `fromReservation builds correct message`() {
+            val reservation = com.example.soen345_winter2026.reservation.Reservation(
+                reservationID = "res-001",
+                eventTitle = "Jazz Festival",
+                eventDate = "2026-07-15",
+                eventLocation = "Place des Arts",
+                ticketCount = 3
+            )
+
+            val message = ConfirmationMessage.fromReservation(reservation, "a@b.com", "5149999999")
+
+            assertThat(message.subject).contains("Jazz Festival")
+            assertThat(message.body).contains("res-001")
+            assertThat(message.body).contains("Place des Arts")
+            assertThat(message.body).contains("3")
+            assertThat(message.recipientEmail).isEqualTo("a@b.com")
+            assertThat(message.recipientPhone).isEqualTo("5149999999")
+        }
+    }
 }
