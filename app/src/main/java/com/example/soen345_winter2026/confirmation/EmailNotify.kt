@@ -1,5 +1,6 @@
 package com.example.soen345_winter2026.confirmation
 
+import android.util.Log
 import java.security.Security
 import java.util.Properties
 import javax.mail.Authenticator
@@ -13,6 +14,7 @@ import com.example.soen345_winter2026.BuildConfig
 
 object EmailNotify : EmailService {
 
+    private const val TAG = "EmailNotify"
     private val senderEmail: String = BuildConfig.SENDER_EMAIL
     private val senderPassword: String = BuildConfig.SENDER_PASSWORD
 
@@ -22,6 +24,7 @@ object EmailNotify : EmailService {
 
     override fun send(message: ConfirmationMessage, callback: (Boolean, String?) -> Unit) {
         if (!hasCredentials()) {
+            Log.w(TAG, "Email credentials not configured — skipping email send")
             callback(false, "Email credentials not configured")
             return
         }
@@ -33,6 +36,8 @@ object EmailNotify : EmailService {
 
         Thread {
             try {
+                Log.d(TAG, "Attempting to send email to ${message.recipientEmail}")
+
                 // Remove Conscrypt as the default SSL provider — it conflicts
                 // with JavaMail's TLS handshake on Android
                 try {
@@ -65,8 +70,11 @@ object EmailNotify : EmailService {
                 }
 
                 Transport.send(mimeMessage)
+
+                Log.d(TAG, "Email sent successfully to ${message.recipientEmail}")
                 callback(true, null)
             } catch (e: Exception) {
+                Log.e(TAG, "Failed to send email", e)
                 callback(false, e.message)
             }
         }.start()
