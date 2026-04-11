@@ -46,6 +46,9 @@ object EmailNotify : EmailService {
                     put("mail.smtp.port", "587")
                     put("mail.smtp.ssl.trust", "smtp.gmail.com")
                     put("mail.smtp.ssl.protocols", "TLSv1.2")
+                    put("mail.smtp.connectiontimeout", "15000")
+                    put("mail.smtp.timeout", "15000")
+                    put("mail.smtp.writetimeout", "15000")
                 }
 
                 val session = Session.getInstance(props, object : Authenticator() {
