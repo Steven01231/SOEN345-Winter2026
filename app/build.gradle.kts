@@ -24,8 +24,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "SENDER_EMAIL", "\"${localProperties["SENDER_EMAIL"]}\"")
-        buildConfigField("String", "SENDER_PASSWORD", "\"${localProperties["SENDER_PASSWORD"]}\"")
+        buildConfigField("String", "SENDER_EMAIL", "\"${localProperties.getProperty("SENDER_EMAIL", "")}\"")
+        buildConfigField("String", "SENDER_PASSWORD", "\"${localProperties.getProperty("SENDER_PASSWORD", "")}\"")
     }
 
     buildTypes {
