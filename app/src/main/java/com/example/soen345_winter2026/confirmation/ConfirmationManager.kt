@@ -7,6 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 object ConfirmationManager {
 
+    var emailService: EmailService = EmailNotify
+
     fun notify(
         context: Context,
         reservation: Reservation,
@@ -41,9 +43,8 @@ object ConfirmationManager {
                 val message = ConfirmationMessage.fromReservation(reservation, email, phone)
 
                 when {
-                    // has both = send both
                     hasRealEmail && hasPhone -> {
-                        EmailNotify.send(message) { emailSuccess, emailError ->
+                        emailService.send(message) { emailSuccess, emailError ->
                             SmsNotify.send(context, message) { smsSuccess, smsError ->
                                 when {
                                     emailSuccess && smsSuccess ->
@@ -58,13 +59,11 @@ object ConfirmationManager {
                             }
                         }
                     }
-                    // email only
                     hasRealEmail -> {
-                        EmailNotify.send(message) { success, error ->
+                        emailService.send(message) { success, error ->
                             callback(success, error)
                         }
                     }
-                    // phone left
                     else -> {
                         SmsNotify.send(context, message) { success, error ->
                             callback(success, error)
