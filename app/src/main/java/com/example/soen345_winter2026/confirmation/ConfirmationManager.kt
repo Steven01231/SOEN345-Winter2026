@@ -50,38 +50,42 @@ object ConfirmationManager {
                 }
 
                 val message = ConfirmationMessage.fromReservation(reservation, email, phone)
-
-                when {
-                    hasRealEmail && hasPhone -> {
-                        emailService.send(message) { emailSuccess, emailError ->
-                            SmsNotify.send(context, message) { smsSuccess, smsError ->
-                                when {
-                                    emailSuccess && smsSuccess ->
-                                        callback(true, null)
-                                    emailSuccess ->
-                                        callback(true, "Email sent but SMS failed: $smsError")
-                                    smsSuccess ->
-                                        callback(true, "SMS sent but email failed: $emailError")
-                                    else ->
-                                        callback(false, "Both failed — Email: $emailError, SMS: $smsError")
-                                }
-                            }
-                        }
-                    }
-                    hasRealEmail -> {
-                        emailService.send(message) { success, error ->
-                            callback(success, error)
-                        }
-                    }
-                    else -> {
-                        SmsNotify.send(context, message) { success, error ->
-                            callback(success, error)
-                        }
-                    }
-                }
+                sendNotifications(context, message, hasRealEmail, hasPhone, callback)
             }
             .addOnFailureListener { e ->
                 callback(false, e.message)
             }
     }
+
+    private fun sendNotifications(
+        context: Context,
+        message: ConfirmationMessage,
+        hasRealEmail: Boolean,
+        hasPhone: Boolean,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        when {
+            hasRealEmail && hasPhone -> sendBoth(context, message, callback)
+            hasRealEmail -> emailService.send(message, callback)
+            else -> SmsNotify.send(context, message, callback)
+        }
+    }
+
+    private fun sendBoth(
+        context: Context,
+        message: ConfirmationMessage,
+        callback: (Boolean, String?) -> Unit
+    ) {
+        emailService.send(message) { emailSuccess, emailError ->
+            SmsNotify.send(context, message) { smsSuccess, smsError ->
+                when {
+                    emailSuccess && smsSuccess -> callback(true, null)
+                    emailSuccess -> callback(true, "Email sent but SMS failed: $smsError")
+                    smsSuccess -> callback(true, "SMS sent but email failed: $emailError")
+                    else -> callback(false, "Both failed — Email: $emailError, SMS: $smsError")
+                }
+            }
+        }
+    }
+
 }
