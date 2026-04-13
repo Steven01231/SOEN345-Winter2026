@@ -438,4 +438,69 @@ class RegistrationDBTest {
         slot.captured.onComplete(mockTaskAuth)
     }
 
+    @Test
+    fun `sendPasswordReset - returns success when firebase succeeds`() {
+        val email = "user@test.com"
+        every { mockAuth.sendPasswordResetEmail(email) } returns mockTaskVoid
+        every { mockTaskVoid.isSuccessful } returns true
+
+        val slot = slot<OnCompleteListener<Void>>()
+        every { mockTaskVoid.addOnCompleteListener(capture(slot)) } returns mockTaskVoid
+
+        var successRes = false
+        var errorRes: String? = "untouched"
+        registrationDB.sendPasswordReset(email) { success, error ->
+            successRes = success
+            errorRes = error
+        }
+        slot.captured.onComplete(mockTaskVoid)
+
+        assertTrue(successRes)
+        assertNull(errorRes)
+    }
+
+    @Test
+    fun `sendPasswordReset - returns error message when firebase fails`() {
+        val email = "user@test.com"
+        every { mockAuth.sendPasswordResetEmail(email) } returns mockTaskVoid
+        every { mockTaskVoid.isSuccessful } returns false
+        every { mockTaskVoid.exception } returns RuntimeException("no such user")
+
+        val slot = slot<OnCompleteListener<Void>>()
+        every { mockTaskVoid.addOnCompleteListener(capture(slot)) } returns mockTaskVoid
+
+        var successRes = true
+        var errorRes: String? = null
+        registrationDB.sendPasswordReset(email) { success, error ->
+            successRes = success
+            errorRes = error
+        }
+        slot.captured.onComplete(mockTaskVoid)
+
+        assertFalse(successRes)
+        assertEquals("no such user", errorRes)
+    }
+
+    @Test
+    fun `sendPasswordReset - propagates null error message`() {
+        val email = "user@test.com"
+        every { mockAuth.sendPasswordResetEmail(email) } returns mockTaskVoid
+        every { mockTaskVoid.isSuccessful } returns false
+        every { mockTaskVoid.exception } returns null
+
+        val slot = slot<OnCompleteListener<Void>>()
+        every { mockTaskVoid.addOnCompleteListener(capture(slot)) } returns mockTaskVoid
+
+        var successRes = true
+        var errorRes: String? = "before"
+        registrationDB.sendPasswordReset(email) { success, error ->
+            successRes = success
+            errorRes = error
+        }
+        slot.captured.onComplete(mockTaskVoid)
+
+        assertFalse(successRes)
+        assertNull(errorRes)
+    }
+
 }
