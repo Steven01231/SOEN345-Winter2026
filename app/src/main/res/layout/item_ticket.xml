@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/cr8bffffff"
-    android:layout_marginHorizontal="15dp"
+    android:background="@color/color_surface"
+    android:layout_marginHorizontal="16dp"
     android:layout_marginBottom="12dp"
     android:elevation="2dp"
     android:orientation="vertical"
@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal">
 
         <TextView
@@ -23,21 +23,25 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textColor="#212121"
+            android:textColor="@color/color_text_primary"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginEnd="8dp"
             android:text="Event Title" />
 
         <TextView
             android:id="@+id/tvTicketStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="5dp"
             android:text="Active"
-            android:textSize="12sp"
+            android:textSize="11sp"
+            android:textStyle="bold"
             android:textColor="#FFFFFF"
-            android:background="@drawable/cr19370800b00c950" />
+            android:background="@drawable/bg_success_badge" />
     </LinearLayout>
 
     <!-- Date -->
@@ -45,21 +49,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="6dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:layout_marginEnd="6dp"
-            android:src="@android:drawable/ic_menu_today"
-            android:scaleType="fitXY" />
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_calendar"
+            android:tint="@color/color_primary"
+            android:scaleType="fitXY"
+            android:contentDescription="Date" />
 
         <TextView
             android:id="@+id/tvTicketDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#757575"
+            android:textColor="@color/color_text_secondary"
             android:textSize="13sp"
             android:text="Date" />
     </LinearLayout>
@@ -69,34 +75,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="16dp"
         android:orientation="horizontal">
 
         <ImageView
             android:layout_width="14dp"
             android:layout_height="14dp"
-            android:layout_marginEnd="6dp"
-            android:src="@android:drawable/ic_menu_mapmode"
-            android:scaleType="fitXY" />
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_location"
+            android:tint="@color/color_primary"
+            android:scaleType="fitXY"
+            android:contentDescription="Location" />
 
         <TextView
             android:id="@+id/tvTicketLocation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#757575"
+            android:textColor="@color/color_text_secondary"
             android:textSize="13sp"
             android:text="Location" />
     </LinearLayout>
 
-    <!-- Cancel button (hidden for cancelled reservations) -->
     <Button
         android:id="@+id/btnCancelTicket"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
+        style="@style/ButtonStyle.Danger"
+        android:layout_height="44dp"
         android:text="Cancel Reservation"
-        android:textAllCaps="false"
-        android:textSize="14sp"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#E53935" />
+        android:textSize="14sp" />
 
 </LinearLayout>
