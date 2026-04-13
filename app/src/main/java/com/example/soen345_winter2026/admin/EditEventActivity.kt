@@ -1,6 +1,5 @@
 package com.example.soen345_winter2026.admin
 
-import android.net.Uri
 import android.widget.Toast
 import com.example.soen345_winter2026.BaseEventActivity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,7 +23,13 @@ class EditEventActivity : BaseEventActivity() {
 
         existingImageUrl = intent.getStringExtra("imageUrl") ?: ""
         if (existingImageUrl.isNotBlank()) {
-            binding.ivImagePreview.setImageURI(Uri.parse(existingImageUrl))
+            com.bumptech.glide.Glide.with(this)
+                .load(existingImageUrl)
+                .centerCrop()
+                .into(binding.ivImagePreview)
+            binding.ivImagePreview.layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            binding.ivImagePreview.layoutParams.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            binding.ivImagePreview.scaleType = android.widget.ImageView.ScaleType.CENTER_CROP
             binding.tvUploadStatus.visibility = android.view.View.GONE
         }
     }
