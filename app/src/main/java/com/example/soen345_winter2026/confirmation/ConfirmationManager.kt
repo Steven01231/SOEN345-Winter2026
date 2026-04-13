@@ -53,7 +53,8 @@ object ConfirmationManager {
                 sendNotifications(context, message, hasRealEmail, hasPhone, callback)
             }
             .addOnFailureListener { e ->
-                callback(false, e.message)
+                Log.e(TAG, "Failed to read users/$userId", e)
+                callback(false, e.message ?: "Failed to read user profile")
             }
     }
 
@@ -65,9 +66,18 @@ object ConfirmationManager {
         callback: (Boolean, String?) -> Unit
     ) {
         when {
-            hasRealEmail && hasPhone -> sendBoth(context, message, callback)
-            hasRealEmail -> emailService.send(message, callback)
-            else -> SmsNotify.send(context, message, callback)
+            hasRealEmail && hasPhone -> {
+                Log.d(TAG, "Dispatching: email + SMS")
+                sendBoth(context, message, callback)
+            }
+            hasRealEmail -> {
+                Log.d(TAG, "Dispatching: email only")
+                emailService.send(message, callback)
+            }
+            else -> {
+                Log.d(TAG, "Dispatching: SMS only")
+                SmsNotify.send(context, message, callback)
+            }
         }
     }
 
