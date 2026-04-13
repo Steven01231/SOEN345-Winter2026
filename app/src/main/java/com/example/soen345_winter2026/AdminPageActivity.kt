@@ -43,6 +43,7 @@ class AdminPageActivity : AppCompatActivity() {
                     putExtra("location", event.location)
                     putExtra("date", event.date)
                     putExtra("availableSeats", event.availableSeats)
+                    putExtra("price", event.price)
                     putExtra("imageUrl", event.imageUrl ?: "")
                 }
                 startActivity(intent)  },

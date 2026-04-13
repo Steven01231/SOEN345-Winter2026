@@ -20,6 +20,7 @@ class EditEventActivity : BaseEventActivity() {
         binding.etLocation.setText(intent.getStringExtra("location"))
         binding.etDate.setText(intent.getStringExtra("date"))
         binding.etCapacity.setText(intent.getIntExtra("availableSeats", 0).toString())
+        binding.etPrice.setText(intent.getDoubleExtra("price", 0.0).toString())
 
         existingImageUrl = intent.getStringExtra("imageUrl") ?: ""
         if (existingImageUrl.isNotBlank()) {
@@ -56,6 +57,7 @@ class EditEventActivity : BaseEventActivity() {
             "location" to values.location,
             "date" to values.date,
             "availableSeats" to values.capacity,
+            "price" to values.price,
             "imageUrl" to imageUrl
         )
 

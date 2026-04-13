@@ -97,6 +97,13 @@
                     android:hint="Total seats available"
                     android:inputType="number" />
 
+                <TextView style="@style/LabelStyle" android:text="Price *" />
+                <EditText
+                    android:id="@+id/etPrice"
+                    style="@style/InputStyle"
+                    android:hint="Ticket price (e.g. 25.00)"
+                    android:inputType="numberDecimal" />
+
                 <TextView style="@style/LabelStyle" android:text="Event Image" />
                 <LinearLayout
                     android:id="@+id/layoutUploadImage"
