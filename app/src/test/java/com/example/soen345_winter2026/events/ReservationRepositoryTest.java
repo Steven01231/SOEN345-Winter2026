@@ -9,6 +9,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -354,6 +355,222 @@ class ReservationRepositoryTest {
 
             assertTrue(successRes.get());
             assertNull(errorRes.get());
+        }
+    }
+
+    @Nested
+    @DisplayName("bookEvent transaction body")
+    class BookEventTransactionBody {
+
+        private DocumentReference reservationRef;
+        private DocumentReference eventRef;
+        private Transaction tx;
+        private Event event;
+
+        @SuppressWarnings("unchecked")
+        @BeforeEach
+        void wire() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            reservationRef = mock(DocumentReference.class);
+            eventRef = mock(DocumentReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document("user1_event1")).thenReturn(reservationRef);
+            when(eventsCol.document("event1")).thenReturn(eventRef);
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            tx = mock(Transaction.class);
+            event = new Event();
+            event.setEventID("event1");
+            event.setTitle("Jazz Night");
+            event.setDate("June 10");
+            event.setLocation("Montreal");
+        }
+
+        @SuppressWarnings("unchecked")
+        private Transaction.Function<Object> captureFunction() {
+            repository.bookEvent("user1", event, (s, e) -> {});
+            ArgumentCaptor<Transaction.Function<Object>> captor =
+                    ArgumentCaptor.forClass(Transaction.Function.class);
+            verify(mockDb).runTransaction(captor.capture());
+            return captor.getValue();
+        }
+
+        @Test
+        @DisplayName("should throw ALREADY_EXISTS when active reservation exists")
+        void throwsWhenAlreadyActive() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(true);
+            when(resSnap.getString("status")).thenReturn("active");
+
+            Transaction.Function<Object> fn = captureFunction();
+            FirebaseFirestoreException ex = assertThrows(FirebaseFirestoreException.class, () -> fn.apply(tx));
+            assertEquals(FirebaseFirestoreException.Code.ALREADY_EXISTS, ex.getCode());
+        }
+
+        @Test
+        @DisplayName("should throw FAILED_PRECONDITION when seats are null")
+        void throwsWhenSeatsNull() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(false);
+            when(evtSnap.getLong("availableSeats")).thenReturn(null);
+
+            Transaction.Function<Object> fn = captureFunction();
+            FirebaseFirestoreException ex = assertThrows(FirebaseFirestoreException.class, () -> fn.apply(tx));
+            assertEquals(FirebaseFirestoreException.Code.FAILED_PRECONDITION, ex.getCode());
+        }
+
+        @Test
+        @DisplayName("should throw FAILED_PRECONDITION when no seats remain")
+        void throwsWhenSoldOut() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(false);
+            when(evtSnap.getLong("availableSeats")).thenReturn(0L);
+
+            Transaction.Function<Object> fn = captureFunction();
+            assertThrows(FirebaseFirestoreException.class, () -> fn.apply(tx));
+        }
+
+        @Test
+        @DisplayName("should proceed when prior reservation is cancelled")
+        void proceedsWhenPriorCancelled() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(true);
+            when(resSnap.getString("status")).thenReturn("cancelled");
+            when(evtSnap.getLong("availableSeats")).thenReturn(5L);
+
+            Transaction.Function<Object> fn = captureFunction();
+            assertNull(fn.apply(tx));
+
+            verify(tx).update(eventRef, "availableSeats", 4L);
+            verify(tx).set(eq(reservationRef), any());
+        }
+
+        @Test
+        @DisplayName("should decrement seats and set reservation data on success")
+        void decrementsAndWritesReservation() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(false);
+            when(evtSnap.getLong("availableSeats")).thenReturn(3L);
+
+            Transaction.Function<Object> fn = captureFunction();
+            fn.apply(tx);
+
+            verify(tx).update(eventRef, "availableSeats", 2L);
+            verify(tx).set(eq(reservationRef), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("cancelReservation transaction body")
+    class CancelReservationTransactionBody {
+
+        private DocumentReference reservationRef;
+        private DocumentReference eventRef;
+        private Transaction tx;
+
+        @SuppressWarnings("unchecked")
+        @BeforeEach
+        void wire() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            reservationRef = mock(DocumentReference.class);
+            eventRef = mock(DocumentReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document("user1_event1")).thenReturn(reservationRef);
+            when(eventsCol.document("event1")).thenReturn(eventRef);
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            tx = mock(Transaction.class);
+        }
+
+        @SuppressWarnings("unchecked")
+        private Transaction.Function<Object> captureFunction() {
+            repository.cancelReservation("user1_event1", "event1", (s, e) -> {});
+            ArgumentCaptor<Transaction.Function<Object>> captor =
+                    ArgumentCaptor.forClass(Transaction.Function.class);
+            verify(mockDb).runTransaction(captor.capture());
+            return captor.getValue();
+        }
+
+        @Test
+        @DisplayName("should throw NOT_FOUND when reservation does not exist")
+        void throwsWhenMissing() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(resSnap.exists()).thenReturn(false);
+
+            Transaction.Function<Object> fn = captureFunction();
+            FirebaseFirestoreException ex = assertThrows(FirebaseFirestoreException.class, () -> fn.apply(tx));
+            assertEquals(FirebaseFirestoreException.Code.NOT_FOUND, ex.getCode());
+        }
+
+        @Test
+        @DisplayName("should throw NOT_FOUND when status is already cancelled")
+        void throwsWhenAlreadyCancelled() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(resSnap.exists()).thenReturn(true);
+            when(resSnap.getString("status")).thenReturn("cancelled");
+
+            Transaction.Function<Object> fn = captureFunction();
+            assertThrows(FirebaseFirestoreException.class, () -> fn.apply(tx));
+        }
+
+        @Test
+        @DisplayName("should restore seat and mark cancelled on success")
+        void restoresSeatAndMarksCancelled() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(true);
+            when(resSnap.getString("status")).thenReturn("active");
+            when(evtSnap.getLong("availableSeats")).thenReturn(4L);
+
+            Transaction.Function<Object> fn = captureFunction();
+            assertNull(fn.apply(tx));
+
+            verify(tx).update(reservationRef, "status", "cancelled");
+            verify(tx).update(eventRef, "availableSeats", 5L);
+        }
+
+        @Test
+        @DisplayName("should treat null seats as zero when restoring")
+        void restoresFromNullSeats() throws Exception {
+            DocumentSnapshot resSnap = mock(DocumentSnapshot.class);
+            DocumentSnapshot evtSnap = mock(DocumentSnapshot.class);
+            when(tx.get(reservationRef)).thenReturn(resSnap);
+            when(tx.get(eventRef)).thenReturn(evtSnap);
+            when(resSnap.exists()).thenReturn(true);
+            when(resSnap.getString("status")).thenReturn("active");
+            when(evtSnap.getLong("availableSeats")).thenReturn(null);
+
+            Transaction.Function<Object> fn = captureFunction();
+            fn.apply(tx);
+
+            verify(tx).update(eventRef, "availableSeats", 1L);
         }
     }
 
