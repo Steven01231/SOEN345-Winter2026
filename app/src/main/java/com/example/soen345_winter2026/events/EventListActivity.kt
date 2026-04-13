@@ -1,20 +1,30 @@
 package com.example.soen345_winter2026.events
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.soen345_winter2026.MyTicketsActivity
 import com.example.soen345_winter2026.ProfileActivity
 import com.example.soen345_winter2026.R
+import com.example.soen345_winter2026.confirmation.ConfirmationManager
 import com.example.soen345_winter2026.databinding.ActivityEventListBinding
+import com.example.soen345_winter2026.reservation.Reservation
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class EventListActivity : AppCompatActivity() {
 
@@ -26,6 +36,16 @@ class EventListActivity : AppCompatActivity() {
     private var allEvents: List<Event> = emptyList()
     private var searchQuery = ""
     private var selectedCategory = ""
+
+    private var pendingReservation: Reservation? = null
+
+    private val smsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        val pending = pendingReservation
+        pendingReservation = null
+        if (pending != null) sendConfirmation(pending)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,11 +85,11 @@ class EventListActivity : AppCompatActivity() {
             button.setOnClickListener {
                 selectedCategory = category
                 buttons.forEach { (b, _) ->
-                    b.setBackgroundResource(R.drawable.cr19370800bf5f5f5)
+                    b.setBackgroundResource(R.drawable.bg_chip_inactive)
                     (b.getChildAt(0) as? android.widget.TextView)
-                        ?.setTextColor(android.graphics.Color.parseColor("#757575"))
+                        ?.setTextColor(android.graphics.Color.parseColor("#5c8aa6"))
                 }
-                button.setBackgroundResource(R.drawable.cr19370800b2196f3)
+                button.setBackgroundResource(R.drawable.bg_chip_active)
                 (button.getChildAt(0) as? android.widget.TextView)
                     ?.setTextColor(android.graphics.Color.WHITE)
                 applyFilters()
@@ -112,8 +132,8 @@ class EventListActivity : AppCompatActivity() {
             binding.navMyTickets to binding.tvNavMyTickets,
             binding.navProfile to binding.tvNavProfile
         )
-        navItems.forEach { (_, label) -> label.setTextColor(Color.parseColor("#757575")) }
-        activeLabel.setTextColor(Color.parseColor("#2196F3"))
+        navItems.forEach { (_, label) -> label.setTextColor(Color.parseColor("#77b1d4")) }
+        activeLabel.setTextColor(Color.parseColor("#42657a"))
     }
 
     private fun loadEvents() {
@@ -153,6 +173,20 @@ class EventListActivity : AppCompatActivity() {
 
         reservationRepository.bookEvent(userId, event) { success, error ->
             if (success) {
+                val reservationId = userId + "_" + event.eventID
+                val reservation = Reservation(
+                    reservationID = reservationId,
+                    userId = userId,
+                    reservationDate = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+                    totalAmount = event.price,
+                    status = "active",
+                    eventTitle = event.title,
+                    eventCategory = event.category,
+                    eventDate = event.date,
+                    eventLocation = event.location,
+                    ticketCount = 1
+                )
+                requestSmsThenConfirm(reservation)
                 showBookingConfirmation(event)
                 loadEvents()
             } else {
@@ -162,6 +196,44 @@ class EventListActivity : AppCompatActivity() {
                     else -> "Booking failed. Please try again."
                 }
                 android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun requestSmsThenConfirm(reservation: Reservation) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            sendConfirmation(reservation)
+            return
+        }
+        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener { doc ->
+                val phone = doc.getString("phone") ?: ""
+                val granted = ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.SEND_SMS
+                ) == PackageManager.PERMISSION_GRANTED
+                if (phone.isNotEmpty() && !granted) {
+                    pendingReservation = reservation
+                    smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
+                } else {
+                    sendConfirmation(reservation)
+                }
+            }
+            .addOnFailureListener { sendConfirmation(reservation) }
+    }
+
+    private fun sendConfirmation(reservation: Reservation) {
+        ConfirmationManager.notify(this, reservation) { success, error ->
+            runOnUiThread {
+                val msg = when {
+                    success && error == null -> "Confirmation sent."
+                    success -> "Confirmation partially sent: $error"
+                    else -> "Confirmation failed: $error"
+                }
+                if (!success || error != null) Log.e("ConfirmationDebug", msg)
+                android.widget.Toast.makeText(
+                    this, msg, android.widget.Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
