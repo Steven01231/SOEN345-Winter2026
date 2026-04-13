@@ -8,6 +8,7 @@
 
     <!-- Toolbar -->
     <LinearLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:gravity="center_vertical"
@@ -52,6 +53,7 @@
 
             <!-- Avatar banner -->
             <LinearLayout
+                android:id="@+id/avatarBanner"
                 android:layout_width="match_parent"
                 android:layout_height="140dp"
                 android:background="@color/color_primary"

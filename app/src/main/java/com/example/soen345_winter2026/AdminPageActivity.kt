@@ -112,7 +112,9 @@ class AdminPageActivity : AppCompatActivity() {
                     false
                 }
                 R.id.nav_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
+                    val intent = Intent(this, ProfileActivity::class.java)
+                        .putExtra("isAdmin", true)
+                    startActivity(intent)
                     false
                 }
                 else -> false

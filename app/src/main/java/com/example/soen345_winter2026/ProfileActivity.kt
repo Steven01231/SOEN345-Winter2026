@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.soen345_winter2026.databinding.ActivityProfileBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -19,6 +20,12 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (intent.getBooleanExtra("isAdmin", false)) {
+            val adminColor = ContextCompat.getColor(this, R.color.color_admin)
+            binding.toolbar.setBackgroundColor(adminColor)
+            binding.avatarBanner.setBackgroundColor(adminColor)
+        }
 
         binding.ibtnBack.setOnClickListener { finish() }
         binding.btnSave.setOnClickListener { saveProfile() }
