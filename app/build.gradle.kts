@@ -1,3 +1,11 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
@@ -16,6 +24,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "SENDER_EMAIL", "\"${localProperties.getProperty("SENDER_EMAIL", "")}\"")
+        buildConfigField("String", "SENDER_PASSWORD", "\"${localProperties.getProperty("SENDER_PASSWORD", "")}\"")
     }
 
     buildTypes {
@@ -39,6 +49,7 @@ android {
     buildFeatures {
         compose = true
         viewBinding = true
+        buildConfig = true
     }
 
     testOptions {
@@ -48,6 +59,13 @@ android {
             all { it.useJUnitPlatform() }
         }
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/LICENSE.md")
+        resources.excludes.add("META-INF/LICENSE-notice.md")
+        resources.excludes.add("META-INF/NOTICE.md")
+    }
+
 }
 
 jacoco {
@@ -64,7 +82,8 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     val exclusions = listOf(
         "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**"
+        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**",
+        "**/EmailNotify*", "**/SmsNotify*"
     )
 
     classDirectories.setFrom(
@@ -141,4 +160,8 @@ dependencies {
     // Debug
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Email sending confirmation
+    implementation("com.sun.mail:android-mail:1.6.7")
+    implementation("com.sun.mail:android-activation:1.6.7")
 }
