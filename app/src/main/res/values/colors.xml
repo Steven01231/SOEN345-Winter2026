@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Legacy Material (keep for theme compat) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,5 +8,64 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="ic_launcher_background">#FF1565C0</color>
+    <color name="ic_launcher_background">#FF2A4251</color>
+
+    <!-- ===================== -->
+    <!--  Brand Palette        -->
+    <!-- ===================== -->
+    <color name="palette_lightest">#e9f2f9</color>  <!-- bg, lightest -->
+    <color name="palette_light">#b6d5ec</color>      <!-- borders, dividers -->
+    <color name="palette_mid">#77b1d4</color>        <!-- icons, hints, inactive nav -->
+    <color name="palette_base">#5c8aa6</color>       <!-- chips, badges, accents -->
+    <color name="palette_dark">#42657a</color>       <!-- primary actions -->
+    <color name="palette_darker">#2a4251</color>     <!-- headers, toolbars -->
+    <color name="palette_darkest">#14222b</color>    <!-- text primary -->
+
+    <!-- ===================== -->
+    <!--  Semantic Aliases     -->
+    <!-- ===================== -->
+    <color name="color_primary">#42657a</color>
+    <color name="color_primary_dark">#2a4251</color>
+    <color name="color_primary_light">#b6d5ec</color>
+    <color name="color_primary_lighter">#e9f2f9</color>
+
+    <!-- Backgrounds -->
+    <color name="color_background">#e9f2f9</color>
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_surface_variant">#dceaf4</color>
+
+    <!-- Text -->
+    <color name="color_text_primary">#14222b</color>
+    <color name="color_text_secondary">#42657a</color>
+    <color name="color_text_hint">#77b1d4</color>
+    <color name="color_text_on_primary">#FFFFFF</color>
+
+    <!-- ===================== -->
+    <!--  Accent / CTA Palette -->
+    <!-- ===================== -->
+    <color name="palette_accent_lightest">#fde0df</color>
+    <color name="palette_accent_light">#faaaa7</color>
+    <color name="palette_accent_mid">#f86c65</color>
+    <color name="palette_accent">#DA3221</color>
+    <color name="palette_accent_dark">#9c2114</color>
+    <color name="palette_accent_darker">#621109</color>
+    <color name="palette_accent_darkest">#2d0402</color>
+
+    <color name="color_accent">#DA3221</color>
+    <color name="color_accent_dark">#9c2114</color>
+    <color name="color_accent_light">#faaaa7</color>
+    <color name="color_accent_lighter">#fde0df</color>
+
+    <!-- Semantic (keep distinct from palette) -->
+    <color name="color_success">#1a7a4a</color>
+    <color name="color_success_bg">#d4eddf</color>
+    <color name="color_error">#b03030</color>
+    <color name="color_error_bg">#f7dede</color>
+    <color name="color_warning">#8a5a00</color>
+
+    <!-- UI Elements -->
+    <color name="color_divider">#b6d5ec</color>
+    <color name="color_border">#b6d5ec</color>
+    <color name="color_nav_inactive">#77b1d4</color>
+    <color name="color_admin">#b05a00</color>
 </resources>
