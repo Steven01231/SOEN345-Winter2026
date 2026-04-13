@@ -136,13 +136,13 @@ class AdminPageActivity : AppCompatActivity() {
     }
 
     private fun cancelEvent(event: Event) {
-        db.collection("events")
-            .whereEqualTo("title", event.title) // ⚠️ ideally use ID instead
-            .get()
-            .addOnSuccessListener { result ->
-                for (doc in result) {
-                    db.collection("events").document(doc.id).delete()
-                }
+        val id = event.eventID
+        if (id.isNullOrBlank()) {
+            Toast.makeText(this, "Missing event id", Toast.LENGTH_SHORT).show()
+            return
+        }
+        db.collection("events").document(id).delete()
+            .addOnSuccessListener {
                 Toast.makeText(this, "Event cancelled", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {
