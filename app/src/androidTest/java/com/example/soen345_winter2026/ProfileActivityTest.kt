@@ -46,7 +46,7 @@ class ProfileActivityTest {
 
     @Test
     fun profileScreen_logoutButtonHasCorrectText() {
-        onView(withId(R.id.btnLogout)).check(matches(withText("Logout")))
+        onView(withId(R.id.btnLogout)).perform(scrollTo()).check(matches(withText("Sign Out")))
     }
 
     @Test
