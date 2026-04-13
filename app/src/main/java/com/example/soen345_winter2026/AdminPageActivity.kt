@@ -90,38 +90,37 @@ class AdminPageActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Switch to Customer View (Placeholder for testing)
         binding.tvCustomerView?.setOnClickListener {
             Toast.makeText(this, "Switching to User View...", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, EventListActivity::class.java)
             startActivity(intent)
         }
 
-        // Floating Action Button
         binding.fabAddEvent.setOnClickListener {
             val intent = Intent(this, AddEventActivity::class.java)
             startActivity(intent)
         }
 
-        // Bottom Navigation Logic
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_dashboard -> true // Already here
-                R.id.nav_events -> {
-                    Toast.makeText(this, "Events Management View", Toast.LENGTH_SHORT).show()
-                    true
-                }
+                R.id.nav_dashboard -> true
+                R.id.nav_events -> true
                 R.id.nav_analytics -> {
                     Toast.makeText(this, "Analytics coming soon!", Toast.LENGTH_SHORT).show()
-                    true
+                    false
                 }
                 R.id.nav_profile -> {
-                    Toast.makeText(this, "Profile settings", Toast.LENGTH_SHORT).show()
-                    true
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    false
                 }
                 else -> false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_dashboard
     }
 
     private fun showCancelConfirmationDialog(event: Event) {
