@@ -10,6 +10,7 @@ import javax.mail.Session
 import javax.mail.Transport
 import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
+import javax.net.ssl.SSLContext
 import com.example.soen345_winter2026.BuildConfig
 
 object EmailNotify : EmailService {
@@ -38,22 +39,30 @@ object EmailNotify : EmailService {
             try {
                 Log.d(TAG, "Attempting to send email to ${message.recipientEmail}")
 
-                // Remove Conscrypt as the default SSL provider — it conflicts
-                // with JavaMail's TLS handshake on Android
-                try {
-                    Security.removeProvider("GmsCore_OpenSSL")
-                } catch (_: Exception) {}
+                // GMS Conscrypt registers as "GmsCore_OpenSSL" and hijacks the default
+                // SSLSocketFactory. Firebase's earlier TLS usage caches a GmsCore socket
+                // factory, so removeProvider alone isn't enough — android-mail still gets
+                // a GmsCore socket whose handshake dies ("Socket is closed"). Build a
+                // fresh SSLContext from the platform provider and hand android-mail its
+                // socket factory explicitly.
+                try { Security.removeProvider("GmsCore_OpenSSL") } catch (_: Exception) {}
 
+                val sslContext = SSLContext.getInstance("TLSv1.2")
+                sslContext.init(null, null, null)
+                val socketFactory = sslContext.socketFactory
+
+                // Use SSL on port 465 (implicit TLS) — no mid-connection socket upgrade.
                 val props = Properties().apply {
-                    put("mail.smtp.auth", "true")
-                    put("mail.smtp.starttls.enable", "true")
-                    put("mail.smtp.host", "smtp.gmail.com")
-                    put("mail.smtp.port", "587")
-                    put("mail.smtp.ssl.trust", "smtp.gmail.com")
-                    put("mail.smtp.ssl.protocols", "TLSv1.2")
-                    put("mail.smtp.connectiontimeout", "15000")
-                    put("mail.smtp.timeout", "15000")
-                    put("mail.smtp.writetimeout", "15000")
+                    put("mail.smtps.auth", "true")
+                    put("mail.smtps.host", "smtp.gmail.com")
+                    put("mail.smtps.port", "465")
+                    put("mail.smtps.ssl.protocols", "TLSv1.2 TLSv1.3")
+                    put("mail.smtps.ssl.socketFactory", socketFactory)
+                    put("mail.smtps.ssl.socketFactory.fallback", "false")
+                    put("mail.smtps.socketFactory.fallback", "false")
+                    put("mail.smtps.connectiontimeout", "15000")
+                    put("mail.smtps.timeout", "15000")
+                    put("mail.smtps.writetimeout", "15000")
                 }
 
                 val session = Session.getInstance(props, object : Authenticator() {
@@ -69,7 +78,10 @@ object EmailNotify : EmailService {
                     setText(message.body)
                 }
 
-                Transport.send(mimeMessage)
+                val transport = session.getTransport("smtps")
+                transport.connect(senderEmail, senderPassword)
+                transport.sendMessage(mimeMessage, mimeMessage.allRecipients)
+                transport.close()
 
                 Log.d(TAG, "Email sent successfully to ${message.recipientEmail}")
                 callback(true, null)
