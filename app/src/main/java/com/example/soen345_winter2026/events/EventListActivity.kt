@@ -56,7 +56,15 @@ class EventListActivity : AppCompatActivity() {
         setupSearch()
         setupCategoryButtons()
         setupBottomNav()
+        setupAdminPreview()
         FirestoreSeeder.seedIfEmpty { loadEvents() }
+    }
+
+    private fun setupAdminPreview() {
+        if (intent.getBooleanExtra("isAdminPreview", false)) {
+            binding.tvBackToAdmin.visibility = View.VISIBLE
+            binding.tvBackToAdmin.setOnClickListener { finish() }
+        }
     }
 
     private fun setupRecyclerView() {

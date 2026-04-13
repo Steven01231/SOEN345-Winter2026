@@ -92,7 +92,9 @@ class AdminPageActivity : AppCompatActivity() {
     private fun setupClickListeners() {
         binding.tvCustomerView?.setOnClickListener {
             Toast.makeText(this, "Switching to User View...", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, EventListActivity::class.java)
+            val intent = Intent(this, EventListActivity::class.java).apply {
+                putExtra("isAdminPreview", true)
+            }
             startActivity(intent)
         }
 
