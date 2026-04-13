@@ -127,4 +127,15 @@ class RegistrationDB(
                 }
             }
     }
+
+    fun sendPasswordReset(email: String, callback: (Boolean, String?) -> Unit) {
+        auth.sendPasswordResetEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    callback(true, null)
+                } else {
+                    callback(false, task.exception?.message)
+                }
+            }
+    }
 }

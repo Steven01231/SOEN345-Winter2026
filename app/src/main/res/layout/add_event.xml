@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@color/color_background"
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="40dp"
+        android:paddingBottom="16dp">
 
+        <!-- Toolbar row -->
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Back"
             android:src="@drawable/ic_arrow_back"
+            android:tint="@color/color_text_primary"
+            android:padding="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Add New Event"
-            android:textColor="#212121"
+            android:textColor="@color/color_text_primary"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:layout_marginStart="4dp"
             app:layout_constraintBottom_toBottomOf="@id/btnBack"
             app:layout_constraintStart_toEndOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="@id/btnBack" />
+            app:layout_constraintTop_toTopOf="@id/btnBack"
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Form card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
+            app:cardCornerRadius="16dp"
             app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/color_surface"
             app:layout_constraintTop_toBottomOf="@id/btnBack">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="20dp">
 
-                <TextView style="@style/LabelStyle" android:text="Event Title *" />
+                <TextView style="@style/LabelStyle" android:layout_marginTop="0dp" android:text="Event Title *" />
                 <EditText
                     android:id="@+id/etEventTitle"
                     style="@style/InputStyle"
@@ -60,52 +68,47 @@
                 <EditText
                     android:id="@+id/etCategory"
                     style="@style/InputStyle"
-                    android:hint="Select Category" />
+                    android:hint="e.g. Movie, Concert, Sports" />
 
                 <TextView style="@style/LabelStyle" android:text="Location *" />
                 <EditText
                     android:id="@+id/etLocation"
                     style="@style/InputStyle"
                     android:drawableStart="@drawable/ic_location"
-                    android:drawablePadding="8dp"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/color_primary"
                     android:hint="Enter location" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:weightSum="1">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginEnd="8dp">
-                        <TextView style="@style/LabelStyle" android:text="Date *" />
-                        <EditText
-                            android:id="@+id/etDate"
-                            style="@style/InputStyle"
-                            android:drawableStart="@drawable/ic_calendar"
-                            android:drawablePadding="8dp"
-                            android:focusable="false"
-                            android:clickable="true" />
-                    </LinearLayout>
-                </LinearLayout>
+                <TextView style="@style/LabelStyle" android:text="Date *" />
+                <EditText
+                    android:id="@+id/etDate"
+                    style="@style/InputStyle"
+                    android:drawableStart="@drawable/ic_calendar"
+                    android:drawablePadding="10dp"
+                    android:drawableTint="@color/color_primary"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:hint="Select date" />
 
                 <TextView style="@style/LabelStyle" android:text="Capacity *" />
                 <EditText
                     android:id="@+id/etCapacity"
                     style="@style/InputStyle"
-                    android:hint="Enter total seats"
+                    android:hint="Total seats available"
                     android:inputType="number" />
+
+                <TextView style="@style/LabelStyle" android:text="Price *" />
+                <EditText
+                    android:id="@+id/etPrice"
+                    style="@style/InputStyle"
+                    android:hint="Ticket price (e.g. 25.00)"
+                    android:inputType="numberDecimal" />
 
                 <TextView style="@style/LabelStyle" android:text="Event Image" />
                 <LinearLayout
                     android:id="@+id/layoutUploadImage"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="160dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_dashed_border"
                     android:clickable="true"
@@ -115,30 +118,33 @@
 
                     <ImageView
                         android:id="@+id/ivImagePreview"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:src="@drawable/ic_camera"
-                        app:tint="#BDBDBD" />
+                        android:tint="@color/color_text_secondary"
+                        android:layout_marginBottom="8dp"
+                        app:tint="@color/color_text_secondary" />
 
                     <TextView
                         android:id="@+id/tvUploadStatus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Upload Image"
-                        android:textColor="#757575" />
+                        android:text="Tap to upload image"
+                        android:textColor="@color/color_text_secondary"
+                        android:textSize="14sp" />
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- Action buttons -->
         <LinearLayout
             android:id="@+id/layoutActionButtons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="16dp"
             android:orientation="horizontal"
-            android:weightSum="2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_form"
             app:layout_constraintVertical_bias="0">
@@ -146,26 +152,29 @@
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:backgroundTint="#EEEEEE"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_outline_btn"
                 android:text="Cancel"
                 android:textAllCaps="false"
-                android:textColor="#757575"
-                app:cornerRadius="8dp" />
+                android:textColor="@color/color_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null" />
 
             <Button
                 android:id="@+id/btnCreateEvent"
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:backgroundTint="#FF9800"
+                android:background="@drawable/bg_primary_btn"
                 android:text="Create Event"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                app:cornerRadius="8dp" />
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

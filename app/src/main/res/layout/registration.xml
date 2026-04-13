@@ -1,84 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center_vertical"
-    android:background="#FFFFFF">
+    android:fillViewport="true"
+    android:background="@color/color_background">
 
-    <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:src="@mipmap/ic_launcher" />
-
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome Back"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
-        android:textColor="#212121"/>
+        android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login to your account"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="32dp"
-        android:textColor="#757575"/>
+        <!-- Blue header section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@color/color_primary"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-    <EditText
-        android:id="@+id/etEmailPhone"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Email or phone (if phone, numbers only)"
-        android:inputType="textEmailAddress"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="16dp"
-        android:background="@android:drawable/edit_text" />
+            <ImageView
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:src="@mipmap/ic_launcher_round"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="EventBook logo" />
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:paddingLeft="15dp"
-        android:layout_marginBottom="24dp"
-        android:background="@android:drawable/edit_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EventBook"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:letterSpacing="0.04" />
 
-    <Button
-        android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:text="Login"
-        android:textAllCaps="false"
-        android:backgroundTint="#6200EE"
-        android:textColor="#FFFFFF" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Discover &amp; book amazing events"
+                android:textSize="14sp"
+                android:textColor="#B3FFFFFF"
+                android:layout_marginTop="4dp" />
 
-    <Button
-        android:id="@+id/adminBtnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="Admin Login"
-        android:textAllCaps="false"
-        android:backgroundTint="#069CCA"
-        android:textColor="#FFFFFF" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/btnSignUp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Don't have an account? Sign Up"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="16dp"
-        android:textColor="#6200EE"
-        android:textStyle="bold" />
+        <!-- Form card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_surface"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="32dp"
+            android:paddingBottom="32dp">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome back"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_text_primary"
+                android:layout_marginBottom="4dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign in to continue"
+                android:textSize="14sp"
+                android:textColor="@color/color_text_secondary"
+                android:layout_marginBottom="28dp" />
+
+            <!-- Email / Phone field -->
+            <TextView
+                style="@style/LabelStyle"
+                android:layout_marginTop="0dp"
+                android:text="Email or Phone" />
+
+            <EditText
+                android:id="@+id/etEmailPhone"
+                style="@style/InputStyle"
+                android:hint="Enter email or phone number"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext" />
+
+            <!-- Password field -->
+            <TextView
+                style="@style/LabelStyle"
+                android:text="Password" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/InputStyle"
+                android:layout_marginBottom="8dp"
+                android:hint="Enter your password"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone" />
+
+            <!-- Forgot password -->
+            <TextView
+                android:id="@+id/tvForgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot password?"
+                android:textSize="14sp"
+                android:textColor="@color/color_primary"
+                android:textStyle="bold"
+                android:layout_gravity="end"
+                android:layout_marginBottom="24dp"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- Login button -->
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/ButtonStyle.Primary"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="40dp"
+                android:text="Sign In"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Admin login button -->
+            <Button
+                android:id="@+id/adminBtnLogin"
+                style="@style/ButtonStyle.Outline"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="32dp"
+                android:text="Admin Sign In"
+                android:layout_marginBottom="24dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Don't have an account? "
+                    android:textSize="14sp"
+                    android:textColor="@color/color_text_secondary" />
+
+                <TextView
+                    android:id="@+id/btnSignUp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign Up"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_primary"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

@@ -4,134 +4,168 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#FFFFFF">
+    android:background="@color/color_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="22dp"
-        android:gravity="center_vertical">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="22dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Create Account"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="7dp"
-            android:textColor="#212121"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Join us to get started"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="22dp"
-            android:textColor="#757575"/>
-
-        <EditText
-            android:id="@+id/etFullName"
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Full Name"
-            android:inputType="textPersonName"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/edit_text" />
+            android:layout_height="160dp"
+            android:background="@color/color_primary"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
-        <EditText
-            android:id="@+id/etEmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Email (optional with phone)"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/edit_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Account"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF" />
 
-        <EditText
-            android:id="@+id/etPhone"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Phone, numbers only (optional with email)"
-            android:inputType="phone"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/edit_text" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Join us to get started"
+                android:textSize="14sp"
+                android:textColor="#B3FFFFFF"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
 
-        <EditText
-            android:id="@+id/etPassword"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:drawable/edit_text" />
-
-        <EditText
-            android:id="@+id/etConfirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Confirm Password"
-            android:inputType="textPassword"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="24dp"
-            android:background="@android:drawable/edit_text" />
-
+        <!-- Form -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="22dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp">
+            android:background="@color/color_surface"
+            android:orientation="vertical"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="32dp">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Register as Admin?"
-                android:textSize="16sp"
-                android:textColor="#212121" />
+                style="@style/LabelStyle"
+                android:layout_marginTop="0dp"
+                android:text="Full Name *" />
 
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/swIsAdmin"
+            <EditText
+                android:id="@+id/etFullName"
+                style="@style/InputStyle"
+                android:hint="Your full name"
+                android:inputType="textPersonName"
+                android:imeOptions="actionNext" />
+
+            <TextView
+                style="@style/LabelStyle"
+                android:text="Email (optional if phone provided)" />
+
+            <EditText
+                android:id="@+id/etEmail"
+                style="@style/InputStyle"
+                android:hint="your@email.com"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext" />
+
+            <TextView
+                style="@style/LabelStyle"
+                android:text="Phone (optional if email provided)" />
+
+            <EditText
+                android:id="@+id/etPhone"
+                style="@style/InputStyle"
+                android:hint="Numbers only"
+                android:inputType="phone"
+                android:imeOptions="actionNext" />
+
+            <TextView
+                style="@style/LabelStyle"
+                android:text="Password *" />
+
+            <EditText
+                android:id="@+id/etPassword"
+                style="@style/InputStyle"
+                android:hint="Min. 6 characters"
+                android:inputType="textPassword"
+                android:imeOptions="actionNext" />
+
+            <TextView
+                style="@style/LabelStyle"
+                android:text="Confirm Password *" />
+
+            <EditText
+                android:id="@+id/etConfirmPassword"
+                style="@style/InputStyle"
+                android:layout_marginBottom="24dp"
+                android:hint="Re-enter your password"
+                android:inputType="textPassword"
+                android:imeOptions="actionDone" />
+
+            <!-- Admin toggle -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_info_section"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:layout_marginBottom="24dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Register as Admin"
+                    android:textSize="15sp"
+                    android:textColor="@color/color_text_primary" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/swIsAdmin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:thumbTint="@color/color_primary"
+                    android:trackTint="@color/color_primary_light" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnSignUp"
+                style="@style/ButtonStyle.Primary"
                 android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:paddingHorizontal="40dp"
+                android:text="Create Account"
+                android:layout_marginBottom="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:thumbTint="#6200EE"
-                android:trackTint="#D1C4E9" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Already have an account? "
+                    android:textSize="14sp"
+                    android:textColor="@color/color_text_secondary" />
+
+                <TextView
+                    android:id="@+id/tvLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sign In"
+                    android:textSize="14sp"
+                    android:textColor="@color/color_primary"
+                    android:textStyle="bold"
+                    android:padding="4dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingBottom="4dp" />
+            </LinearLayout>
+
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnSignUp"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Sign Up"
-            android:textAllCaps="false"
-            android:backgroundTint="#6200EE"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:id="@+id/tvLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Already have an account? Login"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:textColor="#6200EE"
-            android:textStyle="bold"
-            android:paddingBottom="20dp"/>
-
     </LinearLayout>
 </ScrollView>

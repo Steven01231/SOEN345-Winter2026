@@ -30,32 +30,32 @@ class SignUpActivityEspressoTest {
 
     @Test
     fun signUpScreen_fullNameFieldHasCorrectHint() {
-        onView(withId(R.id.etFullName)).check(matches(withHint("Full Name")))
+        onView(withId(R.id.etFullName)).check(matches(withHint("Your full name")))
     }
 
     @Test
     fun signUpScreen_emailFieldHasCorrectHint() {
-        onView(withId(R.id.etEmail)).check(matches(withHint("Email (optional with phone)")))
+        onView(withId(R.id.etEmail)).check(matches(withHint("your@email.com")))
     }
 
     @Test
     fun signUpScreen_phoneFieldHasCorrectHint() {
-        onView(withId(R.id.etPhone)).check(matches(withHint("Phone, numbers only (optional with email)")))
+        onView(withId(R.id.etPhone)).perform(scrollTo()).check(matches(withHint("Numbers only")))
     }
 
     @Test
     fun signUpScreen_passwordFieldHasCorrectHint() {
-        onView(withId(R.id.etPassword)).check(matches(withHint("Password")))
+        onView(withId(R.id.etPassword)).perform(scrollTo()).check(matches(withHint("Min. 6 characters")))
     }
 
     @Test
     fun signUpScreen_confirmPasswordFieldHasCorrectHint() {
-        onView(withId(R.id.etConfirmPassword)).check(matches(withHint("Confirm Password")))
+        onView(withId(R.id.etConfirmPassword)).perform(scrollTo()).check(matches(withHint("Re-enter your password")))
     }
 
     @Test
     fun signUpScreen_signUpButtonHasCorrectText() {
-        onView(withId(R.id.btnSignUp)).check(matches(withText("Sign Up")))
+        onView(withId(R.id.btnSignUp)).perform(scrollTo()).check(matches(withText("Create Account")))
     }
 
     @Test
@@ -65,7 +65,7 @@ class SignUpActivityEspressoTest {
 
     @Test
     fun signUpScreen_loginLinkHasCorrectText() {
-        onView(withId(R.id.tvLogin)).check(matches(withText("Already have an account? Login")))
+        onView(withId(R.id.tvLogin)).perform(scrollTo()).check(matches(withText("Sign In")))
     }
 
     @Test

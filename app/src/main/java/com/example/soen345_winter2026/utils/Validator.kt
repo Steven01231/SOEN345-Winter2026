@@ -63,4 +63,14 @@ object Validator {
     fun isNotEmpty(text: String): Boolean {
         return text.isNotBlank()
     }
+
+    /**
+     * Validates a ticket price string.
+     * Accepts decimals; must parse as a non-negative number.
+     */
+    fun isValidPrice(price: String): Boolean {
+        if (price.isBlank()) return false
+        val value = price.toDoubleOrNull() ?: return false
+        return value >= 0
+    }
 }

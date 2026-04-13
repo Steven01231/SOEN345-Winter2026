@@ -43,6 +43,7 @@ class AdminPageActivity : AppCompatActivity() {
                     putExtra("location", event.location)
                     putExtra("date", event.date)
                     putExtra("availableSeats", event.availableSeats)
+                    putExtra("price", event.price)
                     putExtra("imageUrl", event.imageUrl ?: "")
                 }
                 startActivity(intent)  },
@@ -90,38 +91,41 @@ class AdminPageActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Switch to Customer View (Placeholder for testing)
         binding.tvCustomerView?.setOnClickListener {
             Toast.makeText(this, "Switching to User View...", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this, EventListActivity::class.java)
+            val intent = Intent(this, EventListActivity::class.java).apply {
+                putExtra("isAdminPreview", true)
+            }
             startActivity(intent)
         }
 
-        // Floating Action Button
         binding.fabAddEvent.setOnClickListener {
             val intent = Intent(this, AddEventActivity::class.java)
             startActivity(intent)
         }
 
-        // Bottom Navigation Logic
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_dashboard -> true // Already here
-                R.id.nav_events -> {
-                    Toast.makeText(this, "Events Management View", Toast.LENGTH_SHORT).show()
-                    true
-                }
+                R.id.nav_dashboard -> true
+                R.id.nav_events -> true
                 R.id.nav_analytics -> {
                     Toast.makeText(this, "Analytics coming soon!", Toast.LENGTH_SHORT).show()
-                    true
+                    false
                 }
                 R.id.nav_profile -> {
-                    Toast.makeText(this, "Profile settings", Toast.LENGTH_SHORT).show()
-                    true
+                    val intent = Intent(this, ProfileActivity::class.java)
+                        .putExtra("isAdmin", true)
+                    startActivity(intent)
+                    false
                 }
                 else -> false
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.bottomNavigation.selectedItemId = R.id.nav_dashboard
     }
 
     private fun showCancelConfirmationDialog(event: Event) {
@@ -137,13 +141,13 @@ class AdminPageActivity : AppCompatActivity() {
     }
 
     private fun cancelEvent(event: Event) {
-        db.collection("events")
-            .whereEqualTo("title", event.title) // ⚠️ ideally use ID instead
-            .get()
-            .addOnSuccessListener { result ->
-                for (doc in result) {
-                    db.collection("events").document(doc.id).delete()
-                }
+        val id = event.eventID
+        if (id.isNullOrBlank()) {
+            Toast.makeText(this, "Missing event id", Toast.LENGTH_SHORT).show()
+            return
+        }
+        db.collection("events").document(id).delete()
+            .addOnSuccessListener {
                 Toast.makeText(this, "Event cancelled", Toast.LENGTH_SHORT).show()
             }
             .addOnFailureListener {

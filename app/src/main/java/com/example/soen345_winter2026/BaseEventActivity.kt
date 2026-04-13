@@ -116,6 +116,7 @@ abstract class BaseEventActivity : AppCompatActivity() {
         val location = binding.etLocation.text.toString().trim()
         val date = binding.etDate.text.toString().trim()
         val capacity = binding.etCapacity.text.toString().trim()
+        val price = binding.etPrice.text.toString().trim()
 
         if (title.isEmpty()) {
             binding.etEventTitle.error = "Title is required"
@@ -142,6 +143,11 @@ abstract class BaseEventActivity : AppCompatActivity() {
             return false
         }
 
+        if (!com.example.soen345_winter2026.utils.Validator.isValidPrice(price)) {
+            binding.etPrice.error = "Enter a valid price"
+            return false
+        }
+
         return true
     }
 
@@ -151,7 +157,8 @@ abstract class BaseEventActivity : AppCompatActivity() {
             category = binding.etCategory.text.toString().trim(),
             location = binding.etLocation.text.toString().trim(),
             date = binding.etDate.text.toString().trim(),
-            capacity = binding.etCapacity.text.toString().toIntOrNull() ?: 0
+            capacity = binding.etCapacity.text.toString().toIntOrNull() ?: 0,
+            price = binding.etPrice.text.toString().toDoubleOrNull() ?: 0.0
         )
     }
 
@@ -160,6 +167,7 @@ abstract class BaseEventActivity : AppCompatActivity() {
         val category: String,
         val location: String,
         val date: String,
-        val capacity: Int
+        val capacity: Int,
+        val price: Double
     )
 }

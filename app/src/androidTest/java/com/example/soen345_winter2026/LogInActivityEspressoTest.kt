@@ -18,36 +18,36 @@ class LogInActivityEspressoTest {
 
     @Test
     fun loginScreen_displaysAllUIElements() {
-        onView(withId(R.id.etEmailPhone)).check(matches(isDisplayed()))
-        onView(withId(R.id.etPassword)).check(matches(isDisplayed()))
-        onView(withId(R.id.btnLogin)).check(matches(isDisplayed()))
-        onView(withId(R.id.adminBtnLogin)).check(matches(isDisplayed()))
-        onView(withId(R.id.btnSignUp)).check(matches(isDisplayed()))
+        onView(withId(R.id.etEmailPhone)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.etPassword)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.btnLogin)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.adminBtnLogin)).perform(scrollTo()).check(matches(isDisplayed()))
+        onView(withId(R.id.btnSignUp)).perform(scrollTo()).check(matches(isDisplayed()))
     }
 
     @Test
     fun loginScreen_emailFieldHasCorrectHint() {
-        onView(withId(R.id.etEmailPhone)).check(matches(withHint("Email or phone (if phone, numbers only)")))
+        onView(withId(R.id.etEmailPhone)).check(matches(withHint("Enter email or phone number")))
     }
 
     @Test
     fun loginScreen_passwordFieldHasCorrectHint() {
-        onView(withId(R.id.etPassword)).check(matches(withHint("Password")))
+        onView(withId(R.id.etPassword)).check(matches(withHint("Enter your password")))
     }
 
     @Test
     fun loginScreen_loginButtonHasCorrectText() {
-        onView(withId(R.id.btnLogin)).check(matches(withText("Login")))
+        onView(withId(R.id.btnLogin)).perform(scrollTo()).check(matches(withText("Sign In")))
     }
 
     @Test
     fun loginScreen_adminLoginButtonHasCorrectText() {
-        onView(withId(R.id.adminBtnLogin)).check(matches(withText("Admin Login")))
+        onView(withId(R.id.adminBtnLogin)).perform(scrollTo()).check(matches(withText("Admin Sign In")))
     }
 
     @Test
     fun loginScreen_signUpLinkHasCorrectText() {
-        onView(withId(R.id.btnSignUp)).check(matches(withText("Don't have an account? Sign Up")))
+        onView(withId(R.id.btnSignUp)).perform(scrollTo()).check(matches(withText("Sign Up")))
     }
 
     @Test
@@ -73,7 +73,7 @@ class LogInActivityEspressoTest {
 
     @Test
     fun loginScreen_clickSignUpNavigatesToSignUpScreen() {
-        onView(withId(R.id.btnSignUp)).perform(click())
+        onView(withId(R.id.btnSignUp)).perform(scrollTo(), click())
         onView(withId(R.id.etFullName)).check(matches(isDisplayed()))
     }
 
@@ -95,5 +95,20 @@ class LogInActivityEspressoTest {
     @Test
     fun loginScreen_passwordFieldIsEnabled() {
         onView(withId(R.id.etPassword)).check(matches(isEnabled()))
+    }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkIsDisplayed() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkHasCorrectText() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(withText("Forgot password?")))
+    }
+
+    @Test
+    fun loginScreen_forgotPasswordLinkIsClickable() {
+        onView(withId(R.id.tvForgotPassword)).check(matches(isClickable()))
     }
 }

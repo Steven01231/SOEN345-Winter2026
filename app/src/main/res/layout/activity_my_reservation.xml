@@ -3,19 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F6FA">
+    android:background="@color/color_background">
 
+    <!-- Toolbar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:minHeight="64dp"
         android:gravity="center_vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="18dp"
-        android:paddingEnd="20dp"
-        android:paddingBottom="14dp"
-        android:background="#FFFFFF"
-        android:elevation="4dp">
+        android:paddingHorizontal="8dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="4dp"
+        android:background="@color/color_primary"
+        android:elevation="4dp"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -25,31 +26,23 @@
             android:gravity="center_vertical">
 
             <TextView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/bg_profile_circle_blue"
-                android:gravity="center"
-                android:text="R"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="16dp"
                 android:text="EventBook"
-                android:textColor="#222222"
-                android:textSize="22sp"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
         <ImageView
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="12dp"
             android:background="@drawable/bg_profile_circle_light"
             android:padding="8dp"
             android:src="@drawable/ic_person"
+            android:tint="@color/color_primary"
             android:contentDescription="Profile" />
     </LinearLayout>
 
@@ -70,10 +63,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="My Reservation"
-                android:textColor="#222222"
-                android:textSize="28sp"
+                android:textColor="@color/color_text_primary"
+                android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <!-- Reservation card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,12 +79,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="18dp">
+                    android:padding="20dp">
 
+                    <!-- Title + status badge -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
 
                         <TextView
                             android:id="@+id/tvEventTitle"
@@ -98,22 +94,21 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text=""
-                            android:textColor="#222222"
-                            android:textSize="22sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/color_text_primary"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:layout_marginEnd="8dp" />
 
                         <TextView
                             android:id="@+id/tvReservationStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_badge_blue"
-                            android:paddingStart="14dp"
-                            android:paddingTop="6dp"
-                            android:paddingEnd="14dp"
-                            android:paddingBottom="6dp"
+                            android:paddingHorizontal="14dp"
+                            android:paddingVertical="6dp"
                             android:text=""
                             android:textColor="#FFFFFF"
-                            android:textSize="13sp"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -121,252 +116,265 @@
                         android:id="@+id/tvEventCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="4dp"
                         android:text=""
-                        android:textColor="#7A7A7A"
-                        android:textSize="16sp" />
+                        android:textColor="@color/color_primary"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvEventDate"
-                        android:layout_width="match_parent"
+                    <!-- Date -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text=""
-                        android:textColor="#7A7A7A"
-                        android:textSize="16sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="6dp">
 
-                    <TextView
-                        android:id="@+id/tvEventLocation"
-                        android:layout_width="match_parent"
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/ic_calendar"
+                            android:tint="@color/color_primary"
+                            android:scaleType="fitXY"
+                            android:contentDescription="Date" />
+
+                        <TextView
+                            android:id="@+id/tvEventDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Location -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text=""
-                        android:textColor="#7A7A7A"
-                        android:textSize="16sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="20dp">
 
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/ic_location"
+                            android:tint="@color/color_primary"
+                            android:scaleType="fitXY"
+                            android:contentDescription="Location" />
+
+                        <TextView
+                            android:id="@+id/tvEventLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/color_text_secondary"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Reservation info box -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:background="@drawable/bg_total_box"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="16dp"
+                        android:layout_marginBottom="16dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reservation Information"
-                            android:textColor="#222222"
-                            android:textSize="17sp"
-                            android:textStyle="bold" />
+                            android:text="Reservation Details"
+                            android:textColor="@color/color_text_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="12dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
                             android:text="Reservation ID"
-                            android:textColor="#6F6F6F"
-                            android:textSize="14sp" />
-
+                            android:textColor="@color/color_text_secondary"
+                            android:textSize="12sp" />
                         <TextView
                             android:id="@+id/tvReservationId"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text=""
-                            android:textColor="#222222"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/color_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="12dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
                             android:text="Reservation Date"
-                            android:textColor="#6F6F6F"
-                            android:textSize="14sp" />
-
+                            android:textColor="@color/color_text_secondary"
+                            android:textSize="12sp" />
                         <TextView
                             android:id="@+id/tvReservationDate"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text=""
-                            android:textColor="#222222"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:textColor="@color/color_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="12dp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:text="Ticket Count"
-                            android:textColor="#6F6F6F"
-                            android:textSize="14sp" />
-
+                            android:text="Tickets"
+                            android:textColor="@color/color_text_secondary"
+                            android:textSize="12sp" />
                         <TextView
                             android:id="@+id/tvTicketCount"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text=""
-                            android:textColor="#222222"
-                            android:textSize="15sp"
+                            android:textColor="@color/color_text_primary"
+                            android:textSize="14sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
+                    <!-- Total amount box -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
                         android:background="@drawable/bg_total_box"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:layout_marginBottom="20dp">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:text="Total Amount"
-                            android:textColor="#6F6F6F"
+                            android:textColor="@color/color_text_secondary"
                             android:textSize="14sp" />
 
                         <TextView
                             android:id="@+id/tvTotalAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
                             android:text=""
-                            android:textColor="#222222"
+                            android:textColor="@color/color_primary"
                             android:textSize="24sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnCancelReservation"
-                        android:layout_width="match_parent"
-                        android:layout_height="54dp"
-                        android:layout_marginTop="22dp"
-                        android:background="@drawable/bg_confirm_button"
-                        android:text="Cancel Reservation"
-                        android:textAllCaps="false"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        style="@style/ButtonStyle.Danger"
+                        android:text="Cancel Reservation" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
+    <!-- Bottom navigation (decorative, non-functional on this screen) -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"
-        android:paddingVertical="10dp"
-        android:elevation="10dp"
-        android:orientation="vertical">
+        android:layout_height="64dp"
+        android:background="@color/color_surface"
+        android:elevation="12dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp"
-            android:layout_marginHorizontal="37dp"
-            android:orientation="horizontal">
-
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
             <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@android:drawable/ic_menu_today"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_event"
+                android:tint="@color/color_nav_inactive"
                 android:scaleType="fitXY"
+                android:layout_marginBottom="3dp"
                 android:contentDescription="Home" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@android:drawable/ic_menu_search"
-                android:scaleType="fitXY"
-                android:contentDescription="Search" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@android:drawable/ic_menu_agenda"
-                android:scaleType="fitXY"
-                android:contentDescription="My Tickets" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <ImageView
-                android:layout_width="23dp"
-                android:layout_height="23dp"
-                android:src="@android:drawable/ic_menu_my_calendar"
-                android:scaleType="fitXY"
-                android:contentDescription="Profile" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:layout_marginHorizontal="33dp"
-            android:orientation="horizontal">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Home"
-                android:textColor="#757575"
-                android:textSize="12sp" />
+                android:textColor="@color/color_nav_inactive"
+                android:textSize="11sp" />
+        </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_search"
+                android:tint="@color/color_nav_inactive"
+                android:scaleType="fitXY"
+                android:layout_marginBottom="3dp"
+                android:contentDescription="Search" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Search"
-                android:textColor="#757575"
-                android:textSize="12sp" />
+                android:textColor="@color/color_nav_inactive"
+                android:textSize="11sp" />
+        </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_dashboard"
+                android:tint="@color/color_primary"
+                android:scaleType="fitXY"
+                android:layout_marginBottom="3dp"
+                android:contentDescription="My Tickets" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="My Tickets"
-                android:textColor="#2196F3"
-                android:textSize="12sp" />
+                android:text="Tickets"
+                android:textColor="@color/color_primary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_person"
+                android:tint="@color/color_nav_inactive"
+                android:scaleType="fitXY"
+                android:layout_marginBottom="3dp"
+                android:contentDescription="Profile" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Profile"
-                android:textColor="#757575"
-                android:textSize="12sp" />
+                android:textColor="@color/color_nav_inactive"
+                android:textSize="11sp" />
         </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

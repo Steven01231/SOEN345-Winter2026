@@ -204,4 +204,39 @@ class ValidatorTest {
             assertThat(Validator.isNotEmpty(text)).isFalse()
         }
     }
+
+    @Nested
+    @DisplayName("Price Validation Tests")
+    inner class PriceValidationTests {
+
+        @ParameterizedTest(name = "Price '{0}' should be valid")
+        @ValueSource(strings = ["0", "0.0", "1", "25", "25.00", "99.99", "1000"])
+        fun `valid prices return true`(price: String) {
+            assertThat(Validator.isValidPrice(price)).isTrue()
+        }
+
+        @ParameterizedTest(name = "Price '{0}' should be invalid")
+        @ValueSource(strings = ["", "   ", "abc", "-1", "-0.01", "1.2.3", "$10"])
+        fun `invalid prices return false`(price: String) {
+            assertThat(Validator.isValidPrice(price)).isFalse()
+        }
+
+        @Test
+        @DisplayName("Empty price string returns false")
+        fun `empty price returns false`() {
+            assertThat(Validator.isValidPrice("")).isFalse()
+        }
+
+        @Test
+        @DisplayName("Zero price is accepted (free events)")
+        fun `zero price is valid`() {
+            assertThat(Validator.isValidPrice("0")).isTrue()
+        }
+
+        @Test
+        @DisplayName("Negative price is rejected")
+        fun `negative price is invalid`() {
+            assertThat(Validator.isValidPrice("-5.00")).isFalse()
+        }
+    }
 }

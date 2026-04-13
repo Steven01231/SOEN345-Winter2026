@@ -3,71 +3,66 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/cr8bffffff"
-    android:layout_marginHorizontal="15dp"
-    android:layout_marginBottom="17dp"
-    android:elevation="4dp"
+    android:background="@color/color_surface"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginBottom="16dp"
+    android:elevation="3dp"
     android:orientation="vertical">
 
-    <!-- Event image with category badge overlay -->
-    <RelativeLayout
+    <!-- Event image with category badge -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="#E5E7EB">
+        android:layout_height="170dp"
+        android:background="@color/color_divider">
 
         <ImageView
             android:id="@+id/ivEventImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@android:drawable/ic_menu_gallery" />
+            android:contentDescription="Event image" />
 
-        <!-- Category badge -->
         <LinearLayout
+            android:id="@+id/llCategoryBadge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:paddingTop="11dp"
-            android:paddingEnd="7dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="12dp"
+            android:background="@drawable/bg_admin_btn"
+            android:paddingVertical="5dp"
+            android:paddingHorizontal="14dp"
+            android:gravity="center"
             android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/llCategoryBadge"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tvCategory"
+                android:textColor="@color/color_admin"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 android:layout_height="wrap_content"
-                android:background="@drawable/cr19370800bf6339a"
-                android:paddingVertical="3dp"
-                android:paddingHorizontal="12dp"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tvCategory"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:text="Category" />
-            </LinearLayout>
+                android:layout_width="wrap_content"
+                android:text="Category" />
         </LinearLayout>
-    </RelativeLayout>
+    </FrameLayout>
 
     <!-- Event details -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:paddingBottom="15dp"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
         android:orientation="vertical">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp"
-            android:textColor="#212121"
-            android:textSize="18sp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/color_text_primary"
+            android:textSize="17sp"
             android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:text="Event Title" />
 
         <!-- Date row -->
@@ -75,20 +70,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginBottom="5dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginEnd="8dp"
-                android:src="@android:drawable/ic_menu_today"
-                android:scaleType="fitXY" />
+                android:src="@drawable/ic_calendar"
+                android:tint="@color/color_admin"
+                android:scaleType="fitXY"
+                android:contentDescription="Date" />
 
             <TextView
                 android:id="@+id/tvDate"
-                android:textColor="#757575"
-                android:textSize="14sp"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="13sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Date" />
@@ -99,70 +96,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_marginBottom="13dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_marginEnd="8dp"
-                android:src="@android:drawable/ic_menu_mapmode"
-                android:scaleType="fitXY" />
+                android:src="@drawable/ic_location"
+                android:tint="@color/color_admin"
+                android:scaleType="fitXY"
+                android:contentDescription="Location" />
 
             <TextView
                 android:id="@+id/tvLocation"
-                android:textColor="#757575"
-                android:textSize="14sp"
+                android:textColor="@color/color_text_secondary"
+                android:textSize="13sp"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:text="Location" />
         </LinearLayout>
 
-        <!-- Seats row -->
+        <!-- Seats -->
+        <TextView
+            android:id="@+id/tvSeats"
+            android:textColor="@color/color_success"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:text="Available seats" />
+
+        <!-- Action buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tvSeats"
-                android:textColor="#4CAF50"
-                android:textSize="14sp"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Available: 0 seats" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <!-- Edit Button -->
             <Button
                 android:id="@+id/btnEdit"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:layout_weight="1"
-                android:layout_marginEnd="6dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_outline_btn"
                 android:text="Edit"
                 android:textAllCaps="false"
-                android:backgroundTint="#10B981"
-                android:textColor="#FFFFFF" />
+                android:textColor="@color/color_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null" />
 
-            <!-- Cancel/Delete Button -->
             <Button
                 android:id="@+id/btnCancel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:layout_weight="1"
-                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_danger_btn"
                 android:text="Cancel"
                 android:textAllCaps="false"
-                android:backgroundTint="#EF4444"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:stateListAnimator="@null" />
 
         </LinearLayout>
     </LinearLayout>
