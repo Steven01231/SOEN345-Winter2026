@@ -5,9 +5,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Transaction;
+import com.google.firebase.firestore.WriteBatch;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -254,6 +257,262 @@ class ReservationRepositoryTest {
             captor.getValue().onFailure(new Exception("Query failed"));
 
             assertEquals("Query failed", errorResult.get());
+        }
+    }
+
+    @Nested
+    @DisplayName("bookEvent")
+    class BookEvent {
+
+        private Event buildEvent() {
+            Event e = new Event();
+            e.setEventID("event1");
+            e.setTitle("Jazz Night");
+            e.setDate("June 10");
+            e.setLocation("Montreal");
+            return e;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should reference reservation document by {userId}_{eventId}")
+        void referencesDeterministicReservationId() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            DocumentReference reservationRef = mock(DocumentReference.class);
+            DocumentReference eventRef = mock(DocumentReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document("user1_event1")).thenReturn(reservationRef);
+            when(eventsCol.document("event1")).thenReturn(eventRef);
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            repository.bookEvent("user1", buildEvent(), (success, error) -> {});
+
+            verify(mockCollection).document("user1_event1");
+            verify(eventsCol).document("event1");
+            verify(mockDb).runTransaction(any());
+        }
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should invoke callback with failure on transaction failure")
+        void callsBackWithFailureOnTransactionFailure() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document(any())).thenReturn(mock(DocumentReference.class));
+            when(eventsCol.document(any())).thenReturn(mock(DocumentReference.class));
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            ArgumentCaptor<OnFailureListener> captor = ArgumentCaptor.forClass(OnFailureListener.class);
+
+            AtomicReference<String> errorRes = new AtomicReference<>();
+            AtomicBoolean successRes = new AtomicBoolean(true);
+            repository.bookEvent("user1", buildEvent(), (success, error) -> {
+                successRes.set(success);
+                errorRes.set(error);
+            });
+
+            verify(txTask).addOnFailureListener(captor.capture());
+            captor.getValue().onFailure(new Exception("sold out"));
+
+            assertFalse(successRes.get());
+            assertEquals("sold out", errorRes.get());
+        }
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should invoke callback with success on transaction success")
+        void callsBackWithSuccessOnTransactionSuccess() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document(any())).thenReturn(mock(DocumentReference.class));
+            when(eventsCol.document(any())).thenReturn(mock(DocumentReference.class));
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            ArgumentCaptor<OnSuccessListener<Object>> captor = ArgumentCaptor.forClass(OnSuccessListener.class);
+
+            AtomicBoolean successRes = new AtomicBoolean(false);
+            AtomicReference<String> errorRes = new AtomicReference<>("touched");
+            repository.bookEvent("user1", buildEvent(), (success, error) -> {
+                successRes.set(success);
+                errorRes.set(error);
+            });
+
+            verify(txTask).addOnSuccessListener(captor.capture());
+            captor.getValue().onSuccess(null);
+
+            assertTrue(successRes.get());
+            assertNull(errorRes.get());
+        }
+    }
+
+    @Nested
+    @DisplayName("cancelReservation")
+    class CancelReservation {
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should invoke callback with success on transaction success")
+        void callsBackWithSuccess() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document("user1_event1")).thenReturn(mock(DocumentReference.class));
+            when(eventsCol.document("event1")).thenReturn(mock(DocumentReference.class));
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            ArgumentCaptor<OnSuccessListener<Object>> captor = ArgumentCaptor.forClass(OnSuccessListener.class);
+
+            AtomicBoolean successRes = new AtomicBoolean(false);
+            repository.cancelReservation("user1_event1", "event1", (success, error) -> {
+                successRes.set(success);
+                assertNull(error);
+            });
+
+            verify(txTask).addOnSuccessListener(captor.capture());
+            captor.getValue().onSuccess(null);
+            assertTrue(successRes.get());
+        }
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should invoke callback with failure on transaction failure")
+        void callsBackWithFailure() {
+            CollectionReference eventsCol = mock(CollectionReference.class);
+            when(mockDb.collection("events")).thenReturn(eventsCol);
+            when(mockCollection.document(any())).thenReturn(mock(DocumentReference.class));
+            when(eventsCol.document(any())).thenReturn(mock(DocumentReference.class));
+
+            Task<Object> txTask = mock(Task.class);
+            when(txTask.addOnSuccessListener(any())).thenReturn(txTask);
+            when(txTask.addOnFailureListener(any())).thenReturn(txTask);
+            when(mockDb.runTransaction(any())).thenReturn(txTask);
+
+            ArgumentCaptor<OnFailureListener> captor = ArgumentCaptor.forClass(OnFailureListener.class);
+
+            AtomicReference<String> errorRes = new AtomicReference<>();
+            AtomicBoolean successRes = new AtomicBoolean(true);
+            repository.cancelReservation("user1_event1", "event1", (success, error) -> {
+                successRes.set(success);
+                errorRes.set(error);
+            });
+
+            verify(txTask).addOnFailureListener(captor.capture());
+            captor.getValue().onFailure(new Exception("not active"));
+
+            assertFalse(successRes.get());
+            assertEquals("not active", errorRes.get());
+        }
+    }
+
+    @Nested
+    @DisplayName("cancelAllReservationsForEvent (batch path)")
+    class CancelAllBatch {
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should commit batch update when active reservations exist")
+        void commitsBatchWhenReservationsExist() {
+            Query mockQuery2 = mock(Query.class);
+            when(mockCollection.whereEqualTo(eq("eventId"), eq("event1"))).thenReturn(mockQuery);
+            when(mockQuery.whereEqualTo(eq("status"), eq("active"))).thenReturn(mockQuery2);
+            when(mockQuery2.get()).thenReturn(mockQueryTask);
+
+            DocumentSnapshot doc = mock(DocumentSnapshot.class);
+            DocumentReference docRef = mock(DocumentReference.class);
+            when(doc.getReference()).thenReturn(docRef);
+
+            QuerySnapshot snapshot = mock(QuerySnapshot.class);
+            when(snapshot.isEmpty()).thenReturn(false);
+            when(snapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+            WriteBatch batch = mock(WriteBatch.class);
+            when(mockDb.batch()).thenReturn(batch);
+            when(batch.update(any(DocumentReference.class), eq("status"), eq("cancelled"))).thenReturn(batch);
+
+            Task<Void> commitTask = mock(Task.class);
+            when(batch.commit()).thenReturn(commitTask);
+            when(commitTask.addOnSuccessListener(any())).thenReturn(commitTask);
+            when(commitTask.addOnFailureListener(any())).thenReturn(commitTask);
+
+            ArgumentCaptor<OnSuccessListener<QuerySnapshot>> querySuccess =
+                    ArgumentCaptor.forClass(OnSuccessListener.class);
+
+            AtomicBoolean successRes = new AtomicBoolean(false);
+            repository.cancelAllReservationsForEvent("event1", (success, error) -> {
+                successRes.set(success);
+            });
+
+            verify(mockQueryTask).addOnSuccessListener(querySuccess.capture());
+            querySuccess.getValue().onSuccess(snapshot);
+
+            verify(batch).update(docRef, "status", "cancelled");
+            verify(batch).commit();
+
+            ArgumentCaptor<OnSuccessListener<Void>> commitSuccess =
+                    ArgumentCaptor.forClass(OnSuccessListener.class);
+            verify(commitTask).addOnSuccessListener(commitSuccess.capture());
+            commitSuccess.getValue().onSuccess(null);
+            assertTrue(successRes.get());
+        }
+
+        @SuppressWarnings("unchecked")
+        @Test
+        @DisplayName("should return error when batch commit fails")
+        void returnsErrorWhenCommitFails() {
+            Query mockQuery2 = mock(Query.class);
+            when(mockCollection.whereEqualTo(eq("eventId"), eq("event1"))).thenReturn(mockQuery);
+            when(mockQuery.whereEqualTo(eq("status"), eq("active"))).thenReturn(mockQuery2);
+            when(mockQuery2.get()).thenReturn(mockQueryTask);
+
+            DocumentSnapshot doc = mock(DocumentSnapshot.class);
+            when(doc.getReference()).thenReturn(mock(DocumentReference.class));
+            QuerySnapshot snapshot = mock(QuerySnapshot.class);
+            when(snapshot.isEmpty()).thenReturn(false);
+            when(snapshot.getDocuments()).thenReturn(Collections.singletonList(doc));
+
+            WriteBatch batch = mock(WriteBatch.class);
+            when(mockDb.batch()).thenReturn(batch);
+            when(batch.update(any(DocumentReference.class), eq("status"), eq("cancelled"))).thenReturn(batch);
+
+            Task<Void> commitTask = mock(Task.class);
+            when(batch.commit()).thenReturn(commitTask);
+            when(commitTask.addOnSuccessListener(any())).thenReturn(commitTask);
+            when(commitTask.addOnFailureListener(any())).thenReturn(commitTask);
+
+            ArgumentCaptor<OnSuccessListener<QuerySnapshot>> querySuccess =
+                    ArgumentCaptor.forClass(OnSuccessListener.class);
+            AtomicReference<String> errorRes = new AtomicReference<>();
+            AtomicBoolean successRes = new AtomicBoolean(true);
+            repository.cancelAllReservationsForEvent("event1", (success, error) -> {
+                successRes.set(success);
+                errorRes.set(error);
+            });
+
+            verify(mockQueryTask).addOnSuccessListener(querySuccess.capture());
+            querySuccess.getValue().onSuccess(snapshot);
+
+            ArgumentCaptor<OnFailureListener> commitFailure =
+                    ArgumentCaptor.forClass(OnFailureListener.class);
+            verify(commitTask).addOnFailureListener(commitFailure.capture());
+            commitFailure.getValue().onFailure(new Exception("batch failed"));
+
+            assertFalse(successRes.get());
+            assertEquals("batch failed", errorRes.get());
         }
     }
 
