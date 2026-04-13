@@ -143,12 +143,7 @@ abstract class BaseEventActivity : AppCompatActivity() {
             return false
         }
 
-        if (price.isEmpty()) {
-            binding.etPrice.error = "Price is required"
-            return false
-        }
-
-        if (price.toDoubleOrNull() == null || price.toDouble() < 0) {
+        if (!com.example.soen345_winter2026.utils.Validator.isValidPrice(price)) {
             binding.etPrice.error = "Enter a valid price"
             return false
         }
