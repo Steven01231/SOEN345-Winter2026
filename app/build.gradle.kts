@@ -82,7 +82,8 @@ tasks.register<JacocoReport>("jacocoTestReport") {
 
     val exclusions = listOf(
         "**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*",
-        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**"
+        "**/*Test*.*", "**/databinding/**", "**/test/**", "**/androidTest/**",
+        "**/EmailNotify*", "**/SmsNotify*"
     )
 
     classDirectories.setFrom(
