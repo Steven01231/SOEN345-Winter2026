@@ -56,7 +56,8 @@ public class ReservationRepository {
             DocumentSnapshot reservationSnap = transaction.get(reservationRef);
             DocumentSnapshot eventSnap = transaction.get(eventRef);
 
-            if (reservationSnap.exists() && "active".equals(reservationSnap.getString("status"))) {
+            String existingStatus = reservationSnap.getString("status");
+            if (reservationSnap.exists() && existingStatus != null && existingStatus.equalsIgnoreCase("active")) {
                 throw new FirebaseFirestoreException(
                         "You have already booked this event.",
                         FirebaseFirestoreException.Code.ALREADY_EXISTS
@@ -103,7 +104,8 @@ public class ReservationRepository {
         db.runTransaction(transaction -> {
             DocumentSnapshot reservationSnap = transaction.get(reservationRef);
 
-            if (!reservationSnap.exists() || !"active".equals(reservationSnap.getString("status"))) {
+            String cancelStatus = reservationSnap.getString("status");
+            if (!reservationSnap.exists() || cancelStatus == null || !cancelStatus.equalsIgnoreCase("active")) {
                 throw new FirebaseFirestoreException(
                         "Reservation is not active.",
                         FirebaseFirestoreException.Code.NOT_FOUND

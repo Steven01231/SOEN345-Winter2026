@@ -34,7 +34,7 @@ public class Reservation {
     public String getEventLocation() { return eventLocation; }
     public String getStatus() { return status; }
     public long getCreatedAt() { return createdAt; }
-    public boolean isActive() { return "active".equals(status); }
+    public boolean isActive() { return "active".equalsIgnoreCase(status); }
 
     public void setReservationId(String reservationId) { this.reservationId = reservationId; }
     public void setUserId(String userId) { this.userId = userId; }
